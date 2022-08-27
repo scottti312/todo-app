@@ -31,10 +31,3 @@ export function createDemo() {
   inbox.addTodo(myTodo1);
   return { demoAccount, inbox }
 }
-
-export function remember() {
-  let jsonUser = JSON.parse(localStorage.getItem('user'));
-  // let rememberedAccount = jsonUser
-  // jsonUser 
-  return jsonUser;
-}
