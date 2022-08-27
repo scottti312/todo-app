@@ -1,4 +1,4 @@
-import { createDemo, todo, project, account } from './logic.js';
+import { remember, createDemo, todo, project, account } from './logic.js';
 
 export function dashboard() {
   let content = document.createElement('div');
@@ -7,13 +7,12 @@ export function dashboard() {
   let todosContainer = document.createElement('div');
   let todos = document.createElement('ul');
   let addTodo = document.createElement('button');
-  // if (localStorage.getItem)
-  let { demoAccount, inbox } = createDemo();
+  // let { demoAccount, inbox } = createDemo();
+  // localStorage.clear();
+  let demoAccount = JSON.parse(localStorage.getItem('user'));
+  let inbox = demoAccount.projects[0];
   displayTodos(inbox, todos);
   addTodo.innerHTML = 'Add new task';
-  // addTodo.addEventListener('click', () => {
-  //   addTodo(inbox, todos);
-  // });
   addTodo.addEventListener('click', () => {
     todos.removeChild(addTodo);
     let todoInput = document.createElement('input');
@@ -22,9 +21,11 @@ export function dashboard() {
     todoSubmit.innerHTML = 'Submit';
     todoSubmit.id = 'submit';
     todoSubmit.addEventListener('click', () => {
+
       let newTodo = todo(todoInput.value);
-      inbox.addTodo(newTodo);
-      console.log(newTodo.title);
+      inbox.todos.push(newTodo);
+      localStorage.setItem('user', JSON.stringify(demoAccount));
+
       todoDisplay.innerHTML = newTodo.title;
       todos.append(todoDisplay);
       todos.append(addTodo);
@@ -41,7 +42,6 @@ export function dashboard() {
       }
     });
   });
-  // addTodo.onclick = addTodo(inbox, demoAccount);
   displayProjects(demoAccount, sidebar);
   todos.append(addTodo);
   todosContainer.append(todos);
@@ -51,9 +51,9 @@ export function dashboard() {
   todosContainer.className = 'todos';
   content.append(sidebarContainer);
   content.append(todosContainer);
-
+  console.log('final');
+  console.log(demoAccount);
   localStorage.setItem('user', JSON.stringify(demoAccount));
-  console.log(JSON.parse(localStorage.getItem('user')));
   return content;
 }
 

@@ -14,8 +14,8 @@ export function project(title) {
   return { account, addTodo, todos, title };
 }
 
-export function todo(title = 'Project Title', description = 'Project Description', dueDate = new Date(2022, 12, 25)) {
-  return { account, project, title, description, dueDate };
+export function todo(title = 'Todo Title', description = 'Todo Description', dueDate = new Date(2022, 12, 25)) {
+  return { title, description, dueDate };
 }
 
 export function createDemo() {
@@ -30,4 +30,11 @@ export function createDemo() {
   inbox.addTodo(myTodo);
   inbox.addTodo(myTodo1);
   return { demoAccount, inbox }
+}
+
+export function remember() {
+  let jsonUser = JSON.parse(localStorage.getItem('user'));
+  // let rememberedAccount = jsonUser
+  // jsonUser 
+  return jsonUser;
 }
