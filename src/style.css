@@ -9,9 +9,12 @@ body {
   width: 100vw;
 }
 
-.header {
+.todos {
   grid-column: 2;
   border: 1px solid blue;
+  display: flex;
+  flex-direction: column;
+  padding: 10vh 10vw 10vh 10vw;
 }
 
 .sidebar {
