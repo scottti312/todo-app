@@ -11,11 +11,11 @@ export function project(title) {
   function addTodo(todo) {
     todos.push(todo);
   }
-  return { addTodo, todos, title };
+  return { account, addTodo, todos, title };
 }
 
 export function todo(title = 'Project Title', description = 'Project Description', dueDate = new Date(2022, 12, 25)) {
-  return { title, description, dueDate };
+  return { account, project, title, description, dueDate };
 }
 
 export function createDemo() {

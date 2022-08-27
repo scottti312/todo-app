@@ -6,18 +6,44 @@ export function dashboard() {
   let sidebar = document.createElement('ul');
   let todosContainer = document.createElement('div');
   let todos = document.createElement('ul');
-  let todo1 = todo();
+  let addTodo = document.createElement('button');
+  // if (localStorage.getItem)
   let { demoAccount, inbox } = createDemo();
-  for (const todo of inbox.todos) {
+  displayTodos(inbox, todos);
+  addTodo.innerHTML = 'Add new task';
+  // addTodo.addEventListener('click', () => {
+  //   addTodo(inbox, todos);
+  // });
+  addTodo.addEventListener('click', () => {
+    todos.removeChild(addTodo);
+    let todoInput = document.createElement('input');
+    let todoSubmit = document.createElement('button');
     let todoDisplay = document.createElement('li');
-    todoDisplay.innerHTML = todo.title;
-    todos.append(todoDisplay);
-  }
-  for (const project of demoAccount.projects) {
-    let projectDisplay = document.createElement('li');
-    projectDisplay.innerHTML = project.title;
-    sidebar.append(projectDisplay);
-  }
+    todoSubmit.innerHTML = 'Submit';
+    todoSubmit.id = 'submit';
+    todoSubmit.addEventListener('click', () => {
+      let newTodo = todo(todoInput.value);
+      inbox.addTodo(newTodo);
+      console.log(newTodo.title);
+      todoDisplay.innerHTML = newTodo.title;
+      todos.append(todoDisplay);
+      todos.append(addTodo);
+      todos.removeChild(todoInput);
+      todos.removeChild(todoSubmit);
+      todos.appendChild(addTodo);
+    });
+    todos.append(todoInput);
+    todos.append(todoSubmit);
+    todoInput.addEventListener('keypress', function(event) {
+      if (event.key == 'Enter') {
+        event.preventDefault();
+        document.getElementById('submit').click();
+      }
+    });
+  });
+  // addTodo.onclick = addTodo(inbox, demoAccount);
+  displayProjects(demoAccount, sidebar);
+  todos.append(addTodo);
   todosContainer.append(todos);
   sidebarContainer.append(sidebar);
   content.className = 'dashboard';
@@ -26,6 +52,31 @@ export function dashboard() {
   content.append(sidebarContainer);
   content.append(todosContainer);
 
+  localStorage.setItem('user', JSON.stringify(demoAccount));
+  console.log(JSON.parse(localStorage.getItem('user')));
   return content;
 }
 
+function displayTodos(inbox, todos) {
+  for (const todo of inbox.todos) {
+    let todoDisplay = document.createElement('li');
+    todoDisplay.innerHTML = todo.title;
+    todos.append(todoDisplay);
+  }
+}
+
+function displayProjects(demoAccount, sidebar) {
+  for (const project of demoAccount.projects) {
+    let projectDisplay = document.createElement('li');
+    projectDisplay.innerHTML = project.title;
+    sidebar.append(projectDisplay);
+  }
+}
+
+function addTodo(inbox, todos) {
+  let todoDisplay = document.createElement('li');
+  let newTodo = todo()
+  inbox.addTodo(newTodo);
+  todoDisplay.innerHTML = newTodo.title;
+  todos.append(todoDisplay);
+}
