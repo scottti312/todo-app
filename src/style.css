@@ -9,16 +9,44 @@ body {
   width: 100vw;
 }
 
-.todos {
+li {
+  list-style: none;
+}
+
+ul {
+  padding: 0;
+}
+
+.projects-container {
+  border-right: 1px solid black;
+  grid-column: 1;
+  grid-row: 1 / 2;
+  background-color: #1F2428;
+  color: white;
+  padding: 3rem;
+}
+
+.projects-container li {
+  padding: 0rem 0rem 1.5rem 0rem
+}
+
+.todos-container {
   grid-column: 2;
-  border: 1px solid blue;
   display: flex;
   flex-direction: column;
   padding: 10vh 10vw 10vh 10vw;
+  background-color: #24292E;
+  color: white;
 }
 
-.sidebar {
-  grid-column: 1;
-  grid-row: 1 / 2;
-  border: 1px solid red;
+.todo-section {
+  padding-bottom: 1.1rem;
+  margin-bottom: 1.1rem;
+  border-bottom: 1px solid black;
+}
+
+.todos li {
+  padding-bottom: 1.1rem;
+  margin-bottom: 1.1rem;
+  border-bottom: 1px solid black;
 }
