@@ -2,36 +2,65 @@ import { remember, createDemo, todo, project, account } from './logic.js';
 
 export function dashboard() {
   let content = document.createElement('div');
-  let sidebarContainer = document.createElement('div');
+  let projectsContainer = document.createElement('div');
   let projects = document.createElement('ul');
   let todosContainer = document.createElement('div');
   let todos = document.createElement('ul');
   // let { demoAccount, inbox } = createDemo();
   // localStorage.clear();
   let demoAccount = JSON.parse(localStorage.getItem('user'));
-  console.log(demoAccount);
-  let inbox = demoAccount.projects[0];
-  displayTodos(inbox, todos);
-  let addTodo = addNewTodo(inbox, todos, demoAccount);
+  let currentProject = demoAccount.projects[0];
+  let addTodo = addNewTodo(currentProject, todos, demoAccount);
   let addProject = addNewProject(projects, demoAccount);
+  projectsContainer.className = 'projects-container';
+  projects.className = 'projects';
+  todosContainer.className = 'todos-container';
+  todos.className = 'todos';
+
+
+
+  displayTodos(currentProject, todos);
   displayProjects(demoAccount, projects);
   projects.append(addProject);
   todos.append(addTodo);
   todosContainer.append(todos);
-  sidebarContainer.append(projects);
+  projectsContainer.append(projects);
   content.className = 'dashboard';
-  sidebarContainer.className = 'sidebar';
-  todosContainer.className = 'todos';
-  content.append(sidebarContainer);
+  content.append(projectsContainer);
   content.append(todosContainer);
-  console.log('final');
-  console.log(demoAccount);
   localStorage.setItem('user', JSON.stringify(demoAccount));
+  var nodes = Array.from(todos.children);
+
+  for (const element of todos.querySelectorAll('li')) {
+    element.addEventListener('click', function(e) {
+      todos.removeChild(element);
+      let title = document.createElement('div'); 
+      let index = nodes.indexOf(e.target);
+      let todoSection = document.createElement('div');
+      let description = document.createElement('div');
+      let doneButton = document.createElement('button');
+      todoSection.className = 'todo-section';
+      title.innerText = element.innerText;
+      description.innerText = 'Description: ' + demoAccount.projects[0].todos[index].description;
+      todoSection.appendChild(title);
+      todoSection.appendChild(description);
+      todoSection.appendChild(doneButton);
+
+      doneButton.innerText = 'Done';
+      doneButton.addEventListener('click', () => {
+        todos.removeChild(todoSection);
+        todos.insertBefore(element, todos.children[index]);
+
+      });
+      todos.insertBefore(todoSection, todos.children[index]);
+    });
+  }
+
   return content;
 }
 
-function displayTodos(inbox, todos) {
-  for (const todo of inbox.todos) {
+function displayTodos(currentProject, todos) {
+  for (const todo of currentProject.todos) {
     let todoDisplay = document.createElement('li');
     todoDisplay.innerHTML = todo.title;
     todos.append(todoDisplay);
@@ -46,7 +75,7 @@ function displayProjects(demoAccount, sidebar) {
   }
 }
 
-function addNewTodo(inbox, todos, demoAccount) {
+function addNewTodo(currentProject, todos, demoAccount) {
   let addTodo = document.createElement('button');
   addTodo.innerHTML = 'Add new task';
   addTodo.addEventListener('click', () => {
@@ -58,7 +87,7 @@ function addNewTodo(inbox, todos, demoAccount) {
     todoSubmit.id = 'submit';
     todoSubmit.addEventListener('click', () => {
       let newTodo = todo(todoInput.value);
-      inbox.todos.push(newTodo);
+      currentProject.todos.push(newTodo);
       localStorage.setItem('user', JSON.stringify(demoAccount));
       todoDisplay.innerHTML = newTodo.title;
       todos.append(todoDisplay);
