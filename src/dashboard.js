@@ -7,11 +7,12 @@ export function dashboard() {
   let todosContainer = document.createElement('div');
   let todos = document.createElement('ul');
   // let { demoAccount, inbox } = createDemo();
+  // let currentProject = inbox;
   // localStorage.clear();
   let demoAccount = JSON.parse(localStorage.getItem('user'));
   let currentProject = demoAccount.projects[0];
   let addTodo = addNewTodo(currentProject, todos, demoAccount);
-  let addProject = addNewProject(projects, demoAccount);
+  let addProject = addNewProject(projects, demoAccount, todos);
   projectsContainer.className = 'projects-container';
   projects.className = 'projects';
   todosContainer.className = 'todos-container';
@@ -31,6 +32,7 @@ export function dashboard() {
   localStorage.setItem('user', JSON.stringify(demoAccount));
   var nodes = Array.from(todos.children);
 
+  // Click on todos to see description
   for (const element of todos.querySelectorAll('li')) {
     element.addEventListener('click', function(e) {
       todos.removeChild(element);
@@ -55,6 +57,8 @@ export function dashboard() {
       todos.insertBefore(todoSection, todos.children[index]);
     });
   }
+
+  switchProject(projects, todos, demoAccount);
 
   return content;
 }
@@ -108,7 +112,7 @@ function addNewTodo(currentProject, todos, demoAccount) {
   return addTodo;
 }
 
-function addNewProject(projects, demoAccount) {
+function addNewProject(projects, demoAccount, todos) {
   let addProject = document.createElement('button');
   addProject.innerHTML = 'Add new project';
   addProject.addEventListener('click', () => {
@@ -128,6 +132,8 @@ function addNewProject(projects, demoAccount) {
       projects.removeChild(projectInput);
       projects.removeChild(projectSubmit);
       projects.appendChild(addProject);
+
+      switchProject(projects, todos, demoAccount);
     });
     projects.append(projectInput);
     projects.append(projectSubmit);
@@ -139,4 +145,21 @@ function addNewProject(projects, demoAccount) {
     });
   });
   return addProject;
+}
+
+function switchProject(projects, todos, demoAccount) {
+  // Click on projects to switch currentProject
+  var projectNodes = Array.from(projects.children);
+  for (const element of projects.querySelectorAll('li')) {
+    console.log(element);
+    element.addEventListener('click', function(e) {
+      let index = projectNodes.indexOf(e.target);
+      while(todos.firstChild) {
+        todos.removeChild(todos.firstChild);
+      }
+      console.log(index);
+      displayTodos(demoAccount.projects[index], todos);
+    });
+  }
+
 }
