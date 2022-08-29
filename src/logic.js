@@ -25,11 +25,16 @@ export function createDemo() {
   const myTodo = todo('Example Todo', 'Here is an example description', new Date(2022, 11, 17), false);
   const completedTodo = todo('Completed Todo', 'Here is an example of a completed todo', new Date(2022, 1, 1), true);
   const myTodo1 = todo();
+  const websiteTodo = todo('Add divs', new Date(2022, 1, 5), false);
+  const websiteTodo1 = todo('Style divs', new Date(2022, 1, 6), false);
+  
 
   demoAccount.addProject(inbox);
   demoAccount.addProject(website);
   inbox.addTodo(completedTodo);
   inbox.addTodo(myTodo);
   inbox.addTodo(myTodo1);
+  website.addTodo(websiteTodo);
+  website.addTodo(websiteTodo1);
   return { demoAccount, inbox }
 }
