@@ -30,34 +30,9 @@ export function dashboard() {
   content.append(projectsContainer);
   content.append(todosContainer);
   localStorage.setItem('user', JSON.stringify(demoAccount));
-  var nodes = Array.from(todos.children);
 
-  // Click on todos to see description
-  for (const element of todos.querySelectorAll('li')) {
-    element.addEventListener('click', function(e) {
-      todos.removeChild(element);
-      let title = document.createElement('div'); 
-      let index = nodes.indexOf(e.target);
-      let todoSection = document.createElement('div');
-      let description = document.createElement('div');
-      let doneButton = document.createElement('button');
-      todoSection.className = 'todo-section';
-      title.innerText = element.innerText;
-      description.innerText = 'Description: ' + demoAccount.projects[0].todos[index].description;
-      todoSection.appendChild(title);
-      todoSection.appendChild(description);
-      todoSection.appendChild(doneButton);
 
-      doneButton.innerText = 'Done';
-      doneButton.addEventListener('click', () => {
-        todos.removeChild(todoSection);
-        todos.insertBefore(element, todos.children[index]);
-
-      });
-      todos.insertBefore(todoSection, todos.children[index]);
-    });
-  }
-
+  openTodo(todos, demoAccount);
   switchProject(projects, todos, demoAccount);
 
   return content;
@@ -151,15 +126,43 @@ function switchProject(projects, todos, demoAccount) {
   // Click on projects to switch currentProject
   var projectNodes = Array.from(projects.children);
   for (const element of projects.querySelectorAll('li')) {
-    console.log(element);
     element.addEventListener('click', function(e) {
       let index = projectNodes.indexOf(e.target);
       while(todos.firstChild) {
         todos.removeChild(todos.firstChild);
       }
-      console.log(index);
       displayTodos(demoAccount.projects[index], todos);
+      openTodo(todos, demoAccount);
     });
   }
 
+}
+
+function openTodo(todos, demoAccount) {
+  var nodes = Array.from(todos.children);
+  // Click on todos to see description
+  for (const element of todos.querySelectorAll('li')) {
+    element.addEventListener('click', function(e) {
+      todos.removeChild(element);
+      let title = document.createElement('div'); 
+      let index = nodes.indexOf(e.target);
+      let todoSection = document.createElement('div');
+      let description = document.createElement('div');
+      let doneButton = document.createElement('button');
+      todoSection.className = 'todo-section';
+      title.innerText = element.innerText;
+      description.innerText = 'Description: ' + demoAccount.projects[0].todos[index].description;
+      todoSection.appendChild(title);
+      todoSection.appendChild(description);
+      todoSection.appendChild(doneButton);
+
+      doneButton.innerText = 'Done';
+      doneButton.addEventListener('click', () => {
+        todos.removeChild(todoSection);
+        todos.insertBefore(element, todos.children[index]);
+
+      });
+      todos.insertBefore(todoSection, todos.children[index]);
+    });
+  }
 }
