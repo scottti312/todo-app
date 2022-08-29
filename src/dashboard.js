@@ -35,24 +35,24 @@ export function dashboard() {
   return content;
 }
 
-function displayTodos(currentProject, todos, demoAccount) {
+function displayTodos(currentProject, todos, currentAccount) {
   for (const todo of currentProject.todos) {
     let todoDisplay = document.createElement('li');
     todoDisplay.innerHTML = todo.title;
     todos.append(todoDisplay);
   }
-  todos.append(addNewTodo(currentProject, todos, demoAccount))
+  todos.append(addNewTodo(currentProject, todos, currentAccount))
 }
 
-function displayProjects(demoAccount, sidebar) {
-  for (const project of demoAccount.projects) {
+function displayProjects(currentAccount, sidebar) {
+  for (const project of currentAccount.projects) {
     let projectDisplay = document.createElement('li');
     projectDisplay.innerHTML = project.title;
     sidebar.append(projectDisplay);
   }
 }
 
-function addNewTodo(currentProject, todos, demoAccount) {
+function addNewTodo(currentProject, todos, currentAccount) {
   let addTodo = document.createElement('button');
   addTodo.innerHTML = 'Add new task';
   addTodo.addEventListener('click', () => {
@@ -65,14 +65,14 @@ function addNewTodo(currentProject, todos, demoAccount) {
     todoSubmit.addEventListener('click', () => {
       let newTodo = todo(todoInput.value);
       currentProject.todos.push(newTodo);
-      localStorage.setItem('user', JSON.stringify(demoAccount));
+      localStorage.setItem('user', JSON.stringify(currentAccount));
       todoDisplay.innerHTML = newTodo.title;
       todos.append(todoDisplay);
       todos.append(addTodo);
       todos.removeChild(todoInput);
       todos.removeChild(todoSubmit);
       todos.appendChild(addTodo);
-      openTodo(todos, demoAccount, currentProject);
+      openTodo(todos, currentAccount, currentProject);
     });
     todos.append(todoInput);
     todos.append(todoSubmit);
@@ -121,7 +121,7 @@ function addNewProject(projects, demoAccount, todos, currentProject) {
   return addProject;
 }
 
-function switchProject(projects, todos, demoAccount) {
+function switchProject(projects, todos, currentAccount) {
   // Click on projects to switch currentProject
   var projectNodes = Array.from(projects.children);
   for (const element of projects.querySelectorAll('li')) {
@@ -130,16 +130,16 @@ function switchProject(projects, todos, demoAccount) {
       while(todos.firstChild) {
         todos.removeChild(todos.firstChild);
       }
-      let currentProject = demoAccount.projects[index];
-      displayTodos(currentProject, todos, demoAccount);
-      openTodo(todos, demoAccount, currentProject);
+      let currentProject = currentAccount.projects[index];
+      displayTodos(currentProject, todos, currentAccount);
+      openTodo(todos, currentAccount, currentProject);
       return index;
     });
   }
 
 }
 
-function openTodo(todos, demoAccount, currentProject) {
+function openTodo(todos, currentAccount, currentProject) {
   var nodes = Array.from(todos.children);
   // Click on todos to see description
   for (const element of todos.querySelectorAll('li')) {
@@ -153,7 +153,7 @@ function openTodo(todos, demoAccount, currentProject) {
       let removeButton = document.createElement('button');
       todoSection.className = 'todo-section';
       title.innerText = element.innerText;
-      description.innerText = 'Description: ' + demoAccount.projects[0].todos[index].description;
+      description.innerText = 'Description: ' + currentAccount.projects[0].todos[index].description;
       todoSection.appendChild(title);
       todoSection.appendChild(description);
       todoSection.appendChild(removeButton);
@@ -161,7 +161,7 @@ function openTodo(todos, demoAccount, currentProject) {
       removeButton.innerText = 'Remove';
       removeButton.addEventListener('click', () => {
         currentProject.todos.splice(index, 1);
-        localStorage.setItem('user', JSON.stringify(demoAccount));
+        localStorage.setItem('user', JSON.stringify(currentAccount));
         todos.removeChild(todoSection);
       });
 
