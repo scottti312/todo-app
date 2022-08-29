@@ -11,19 +11,15 @@ export function dashboard() {
   // localStorage.clear();
   let demoAccount = JSON.parse(localStorage.getItem('user'));
   let currentProject = demoAccount.projects[0];
-  let addTodo = addNewTodo(currentProject, todos, demoAccount);
-  let addProject = addNewProject(projects, demoAccount, todos);
+  let addProject = addNewProject(projects, demoAccount, todos, currentProject);
   projectsContainer.className = 'projects-container';
   projects.className = 'projects';
   todosContainer.className = 'todos-container';
   todos.className = 'todos';
 
-
-
-  displayTodos(currentProject, todos);
+  displayTodos(currentProject, todos, demoAccount);
   displayProjects(demoAccount, projects);
   projects.append(addProject);
-  todos.append(addTodo);
   todosContainer.append(todos);
   projectsContainer.append(projects);
   content.className = 'dashboard';
@@ -32,18 +28,20 @@ export function dashboard() {
   localStorage.setItem('user', JSON.stringify(demoAccount));
 
 
-  openTodo(todos, demoAccount);
-  switchProject(projects, todos, demoAccount);
+  openTodo(todos, demoAccount, currentProject);
+  let currentProjectIndex = switchProject(projects, todos, demoAccount, currentProject);
+  currentProject = demoAccount.projects[currentProjectIndex];
 
   return content;
 }
 
-function displayTodos(currentProject, todos) {
+function displayTodos(currentProject, todos, demoAccount) {
   for (const todo of currentProject.todos) {
     let todoDisplay = document.createElement('li');
     todoDisplay.innerHTML = todo.title;
     todos.append(todoDisplay);
   }
+  todos.append(addNewTodo(currentProject, todos, demoAccount))
 }
 
 function displayProjects(demoAccount, sidebar) {
@@ -74,6 +72,7 @@ function addNewTodo(currentProject, todos, demoAccount) {
       todos.removeChild(todoInput);
       todos.removeChild(todoSubmit);
       todos.appendChild(addTodo);
+      openTodo(todos, demoAccount, currentProject);
     });
     todos.append(todoInput);
     todos.append(todoSubmit);
@@ -87,7 +86,7 @@ function addNewTodo(currentProject, todos, demoAccount) {
   return addTodo;
 }
 
-function addNewProject(projects, demoAccount, todos) {
+function addNewProject(projects, demoAccount, todos, currentProject) {
   let addProject = document.createElement('button');
   addProject.innerHTML = 'Add new project';
   addProject.addEventListener('click', () => {
@@ -108,7 +107,7 @@ function addNewProject(projects, demoAccount, todos) {
       projects.removeChild(projectSubmit);
       projects.appendChild(addProject);
 
-      switchProject(projects, todos, demoAccount);
+      switchProject(projects, todos, demoAccount, currentProject);
     });
     projects.append(projectInput);
     projects.append(projectSubmit);
@@ -131,14 +130,16 @@ function switchProject(projects, todos, demoAccount) {
       while(todos.firstChild) {
         todos.removeChild(todos.firstChild);
       }
-      displayTodos(demoAccount.projects[index], todos);
-      openTodo(todos, demoAccount);
+      let currentProject = demoAccount.projects[index];
+      displayTodos(currentProject, todos, demoAccount);
+      openTodo(todos, demoAccount, currentProject);
+      return index;
     });
   }
 
 }
 
-function openTodo(todos, demoAccount) {
+function openTodo(todos, demoAccount, currentProject) {
   var nodes = Array.from(todos.children);
   // Click on todos to see description
   for (const element of todos.querySelectorAll('li')) {
@@ -149,12 +150,20 @@ function openTodo(todos, demoAccount) {
       let todoSection = document.createElement('div');
       let description = document.createElement('div');
       let doneButton = document.createElement('button');
+      let removeButton = document.createElement('button');
       todoSection.className = 'todo-section';
       title.innerText = element.innerText;
       description.innerText = 'Description: ' + demoAccount.projects[0].todos[index].description;
       todoSection.appendChild(title);
       todoSection.appendChild(description);
+      todoSection.appendChild(removeButton);
       todoSection.appendChild(doneButton);
+      removeButton.innerText = 'Remove';
+      removeButton.addEventListener('click', () => {
+        currentProject.todos.splice(index, 1);
+        localStorage.setItem('user', JSON.stringify(demoAccount));
+        todos.removeChild(todoSection);
+      });
 
       doneButton.innerText = 'Done';
       doneButton.addEventListener('click', () => {
