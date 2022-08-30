@@ -54,6 +54,7 @@ function displayProjects(currentAccount, sidebar) {
 
 function addNewTodo(currentProject, todos, currentAccount) {
   let addTodo = document.createElement('button');
+  addTodo.className = 'add-todo';
   addTodo.innerHTML = 'Add new task';
   addTodo.addEventListener('click', () => {
     todos.removeChild(addTodo);
@@ -64,18 +65,20 @@ function addNewTodo(currentProject, todos, currentAccount) {
     let todoInputDescription = document.createElement('textarea');
     let todoSubmit = document.createElement('button');
     let todoDisplay = document.createElement('li');
+
     todoTitleLabel.innerHTML = 'Title';
     todoTitleLabel.setAttribute('for', 'todo-title-input');
     todoDescriptionLabel.innerHTML = 'Description';
     todoDescriptionLabel.setAttribute('for', 'todo-description-input');
     todoDescriptionLabel.for = 'todo-description-input';
-    createTodoContainer.className = 'create-todo';
+    createTodoContainer.className = 'create-todo-form';
     todoInputTitle.id = 'todo-title-input';
     todoInputDescription.id = 'todo-description-input';
     todoInputDescription.setAttribute('column', 80);
     todoInputDescription.setAttribute('row', 3);
     todoSubmit.innerHTML = 'Submit';
     todoSubmit.id = 'submit';
+
     todoSubmit.addEventListener('click', () => {
       if (todoInputTitle.value != '') {
         let newTodoTitle = todoInputTitle.value;
@@ -164,14 +167,14 @@ function switchProject(projects, todos, currentAccount) {
       return index;
     });
   }
-
 }
 
 function openTodo(todos, currentAccount, currentProject) {
   var nodes = Array.from(todos.children);
-  // Click on todos to see description
+  // Click on todos to "open" them
   for (const element of todos.querySelectorAll('li')) {
     element.addEventListener('click', function(e) {
+      console.log(todos);
       todos.removeChild(element);
       let title = document.createElement('textarea'); 
       let index = nodes.indexOf(e.target);
@@ -180,6 +183,8 @@ function openTodo(todos, currentAccount, currentProject) {
       let doneButton = document.createElement('button');
       let removeButton = document.createElement('button');
       let resultTodo = document.createElement('li');
+      let buttonsContainer = document.createElement('div');
+      
       description.setAttribute('column', 80);
       description.setAttribute('row', 5);
       description.id = 'todo-description';
@@ -189,8 +194,17 @@ function openTodo(todos, currentAccount, currentProject) {
       title.setAttribute('row', 1);
       title.value = element.innerText;
       description.value = currentAccount.projects[0].todos[index].description;
-      todoContainer.append(title, description, removeButton, doneButton);
-      removeButton.innerText = 'Remove';
+
+      title.addEventListener('keypress', function(e) {
+        if (e.key == 'Enter') {
+          e.preventDefault();
+          doneButton.click();
+        }
+      });
+
+      buttonsContainer.append(removeButton, doneButton);
+      todoContainer.append(title, description, buttonsContainer);
+      removeButton.innerText = 'Delete task';
       removeButton.addEventListener('click', () => {
         currentProject.todos.splice(index, 1);
         localStorage.setItem('user', JSON.stringify(currentAccount));
