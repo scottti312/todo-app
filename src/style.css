@@ -43,6 +43,18 @@ ul {
   padding-bottom: 1.1rem;
   margin-bottom: 1.1rem;
   border-bottom: 1px solid black;
+  display: flex;
+  flex-direction: column;
+}
+
+#todo-title {
+  height: 1rem;
+  width: 30rem;
+}
+
+#todo-description {
+  height: 5rem;
+  width: 30rem;
 }
 
 .todos li {
@@ -57,9 +69,10 @@ ul {
 }
 
 #todo-title-input {
-  width: 50%;
+  width: 30rem;
 }
 
 #todo-description-input {
-  width: 50%;
+  height: 5rem;
+  width: 30rem;
 }
