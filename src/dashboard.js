@@ -1,4 +1,4 @@
-import { remember, createDemo, todo, project, account } from './logic.js';
+import { createDemo, todo, project } from './logic.js';
 
 export function dashboard() {
   let content = document.createElement('div');
@@ -57,26 +57,56 @@ function addNewTodo(currentProject, todos, currentAccount) {
   addTodo.innerHTML = 'Add new task';
   addTodo.addEventListener('click', () => {
     todos.removeChild(addTodo);
-    let todoInput = document.createElement('input');
+    let createTodoContainer = document.createElement('div');
+    let todoTitleLabel = document.createElement('label');
+    let todoInputTitle = document.createElement('input');
+    let todoDescriptionLabel = document.createElement('label');
+    let todoInputDescription = document.createElement('input');
     let todoSubmit = document.createElement('button');
     let todoDisplay = document.createElement('li');
+    todoTitleLabel.innerHTML = 'Title';
+    todoTitleLabel.setAttribute('for', 'todo-title-input');
+    todoDescriptionLabel.innerHTML = 'Description';
+    todoDescriptionLabel.setAttribute('for', 'todo-description-input');
+    todoDescriptionLabel.for = 'todo-description-input';
+    createTodoContainer.className = 'create-todo';
+    todoInputTitle.id = 'todo-title-input';
+    todoInputDescription.id = 'todo-description-input';
     todoSubmit.innerHTML = 'Submit';
     todoSubmit.id = 'submit';
     todoSubmit.addEventListener('click', () => {
-      let newTodo = todo(todoInput.value);
-      currentProject.todos.push(newTodo);
-      localStorage.setItem('user', JSON.stringify(currentAccount));
-      todoDisplay.innerHTML = newTodo.title;
-      todos.append(todoDisplay);
-      todos.append(addTodo);
-      todos.removeChild(todoInput);
+      if (todoInputTitle.value != '') {
+        let newTodoTitle = todoInputTitle.value;
+        let newTodoDescription = todoInputDescription.value;
+        if (todoInputDescription.value == '') {
+          newTodoDescription = 'Empty';
+        }
+        let newTodo = todo(newTodoTitle, newTodoDescription);
+        currentProject.todos.push(newTodo);
+        localStorage.setItem('user', JSON.stringify(currentAccount));
+        todoDisplay.innerHTML = newTodo.title;
+        todos.append(todoDisplay);
+      }
+      // todos.removeChild(todoInputTitle);
+      // todos.removeChild(todoInputDescription);
+      todos.removeChild(createTodoContainer);
       todos.removeChild(todoSubmit);
       todos.appendChild(addTodo);
+      // Update openTodo with new todo entry
       openTodo(todos, currentAccount, currentProject);
     });
-    todos.append(todoInput);
+    createTodoContainer.append(todoTitleLabel, todoInputTitle, todoDescriptionLabel, todoInputDescription);
+    // todos.append(todoInputTitle);
+    // todos.append(todoInputDescription);
+    todos.append(createTodoContainer);
     todos.append(todoSubmit);
-    todoInput.addEventListener('keypress', function(event) {
+    todoInputTitle.addEventListener('keypress', function(event) {
+      if (event.key == 'Enter') {
+        event.preventDefault();
+        document.getElementById('submit').click();
+      }
+    });
+    todoInputDescription.addEventListener('keypress', function(event) {
       if (event.key == 'Enter') {
         event.preventDefault();
         document.getElementById('submit').click();
@@ -140,6 +170,7 @@ function switchProject(projects, todos, currentAccount) {
 }
 
 function openTodo(todos, currentAccount, currentProject) {
+  console.log(currentProject.todos);
   var nodes = Array.from(todos.children);
   // Click on todos to see description
   for (const element of todos.querySelectorAll('li')) {
