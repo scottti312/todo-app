@@ -58,8 +58,12 @@ export function switchProject(projects, todos, currentAccount) {
                 todos.removeChild(todos.firstChild);
             }
             let currentProject = currentAccount.projects[index];
-            displayTodos(currentProject, todos, currentAccount);
-            openTodo(todos, currentAccount, currentProject);
+            for (const todo of currentProject.todos) {
+              displayTodo(todo, currentProject, todos, currentAccount);
+            }
+            for (const element of todos.querySelectorAll('li')) {
+              openTodo(element, todos, currentAccount, currentProject);
+            }
             return index;
         });
     };

@@ -1,15 +1,31 @@
-export function displayTodos(currentProject, todos, currentAccount) {
-  for (const todo of currentProject.todos) {
+import {todo} from './logic.js';
+
+export function displayTodo(todo, todos, currentAccount) {
     let todoDisplay = document.createElement('li');
     let todoTitle = document.createElement('div');
-    let checkbox = document.createElement('button');
+    let checkbox = document.createElement('input');
+    checkbox.setAttribute('type', 'checkbox');
+    checkbox.className = 'checkbox';
     todoTitle.innerHTML = todo.title;
     todoDisplay.appendChild(checkbox);
-    todoDisplay.appendChild(todoTitle)
-    
+    todoDisplay.appendChild(todoTitle);
+
+    if (todo.completed) {
+        checkbox.checked = true;
+        todoDisplay.style.textDecoration = 'line-through';
+    }
+    checkbox.addEventListener('change', function() {
+        if (this.checked) {
+            todo.completed = true;
+            todoDisplay.style.textDecoration = 'line-through';
+            localStorage.setItem('user', JSON.stringify(currentAccount));
+        } else {
+            todo.completed = false;
+            todoDisplay.style.textDecoration = 'none';
+            localStorage.setItem('user', JSON.stringify(currentAccount));
+        }
+    });
     todos.append(todoDisplay);
-  }
-  todos.append(addNewTodo(currentProject, todos, currentAccount))
 }
 
 export function addNewTodo(currentProject, todos, currentAccount) {
@@ -25,6 +41,8 @@ export function addNewTodo(currentProject, todos, currentAccount) {
     let todoInputDescription = document.createElement('textarea');
     let todoSubmit = document.createElement('button');
     let todoDisplay = document.createElement('li');
+    let todoTitle = document.createElement('div');
+    let checkbox = document.createElement('button');
 
     todoTitleLabel.innerHTML = 'Title';
     todoTitleLabel.setAttribute('for', 'todo-title-input');
@@ -49,18 +67,26 @@ export function addNewTodo(currentProject, todos, currentAccount) {
         let newTodo = todo(newTodoTitle, newTodoDescription);
         currentProject.todos.push(newTodo);
         localStorage.setItem('user', JSON.stringify(currentAccount));
-        todoDisplay.innerHTML = newTodo.title;
-        todos.append(todoDisplay);
+        todoTitle.innerHTML = newTodo.title;
+        todoDisplay.append(checkbox, todoTitle);
+        // todos.append(todoDisplay);
+        todos.removeChild(createTodoContainer);
+        todos.removeChild(todoSubmit);
+        displayTodo(newTodo, todos, currentAccount);
+
+        openTodo(todos.lastChild, todos, currentAccount, currentProject);
+        todos.appendChild(addTodo);
+      } else {
+        todos.removeChild(createTodoContainer);
+        todos.removeChild(todoSubmit);
+        todos.appendChild(addTodo);
       }
-      todos.removeChild(createTodoContainer);
-      todos.removeChild(todoSubmit);
-      todos.appendChild(addTodo);
-      // Update openTodo with new todo entry
-      openTodo(todos, currentAccount, currentProject);
     });
+
     createTodoContainer.append(todoTitleLabel, todoInputTitle, todoDescriptionLabel, todoInputDescription);
     todos.append(createTodoContainer);
     todos.append(todoSubmit);
+
     todoInputTitle.addEventListener('keypress', function(event) {
       if (event.key == 'Enter') {
         event.preventDefault();
@@ -77,75 +103,84 @@ export function addNewTodo(currentProject, todos, currentAccount) {
   return addTodo;
 }
 
-export function openTodo(todos, currentAccount, currentProject) {
-  var nodes = Array.from(todos.children);
-  // Click on todos to "open" them
-  for (const element of todos.querySelectorAll('li')) {
+export function openTodo(element, todos, currentAccount, currentProject) {
+    console.log(todos);
+    var nodes = Array.from(todos.children);
+    // Click on todos to "open" them
+
     element.addEventListener('click', function(e) {
         let target = e.target;
         if (e.target.tagName == 'DIV') {
-            console.log('happened');
             target = e.target.parentElement;
         }
     // Children are not affected by event.
-    //   if (e.target !== this) {
-    //     return;
-    //   }
-      element.style.display = 'none';
-      let title = document.createElement('textarea'); 
-      let index = nodes.indexOf(target);
-      let todoContainer = document.createElement('div');
-      let description = document.createElement('textarea');
-      let doneButton = document.createElement('button');
-      let removeButton = document.createElement('button');
-      let buttonsContainer = document.createElement('div');
-      
-      description.setAttribute('column', 80);
-      description.setAttribute('row', 5);
-      description.id = 'todo-description';
-      todoContainer.className = 'todo-section';
-      title.id = 'todo-title';
-      title.setAttribute('column', 80);
-      title.setAttribute('row', 1);
-      title.value = element.querySelector('div').innerText;
-      description.value = currentProject.todos[index].description;
+      if (target !== this) {
+        return;
+      }
+        element.style.display = 'none';
+        let index = nodes.indexOf(target);
+        let title = document.createElement('textarea'); 
+        let todoContainer = document.createElement('div');
+        let description = document.createElement('textarea');
+        let doneButton = document.createElement('button');
+        let removeButton = document.createElement('button');
+        let buttonsContainer = document.createElement('div');
+        
+        description.setAttribute('column', 80);
+        description.setAttribute('row', 5);
+        description.id = 'todo-description';
+        todoContainer.className = 'todo-section';
+        title.id = 'todo-title';
+        title.setAttribute('column', 80);
+        title.setAttribute('row', 1);
+        title.value = element.querySelector('div').innerText;
+        description.value = currentProject.todos[index].description;
 
-      title.addEventListener('keypress', function(e) {
+        title.addEventListener('keypress', function(e) {
         if (e.key == 'Enter') {
-          e.preventDefault();
-          doneButton.click();
+            e.preventDefault();
+            doneButton.click();
         }
-      });
+        });
 
-      buttonsContainer.append(removeButton, doneButton);
-      todoContainer.append(title, description, buttonsContainer);
-      removeButton.innerText = 'Delete task';
+        buttonsContainer.append(removeButton, doneButton);
+        todoContainer.append(title, description, buttonsContainer);
+        removeButton.innerText = 'Delete task';
 
-      // Remove a task
-      removeButton.addEventListener('click', () => {
-        currentProject.todos.splice(index, 1);
-        localStorage.setItem('user', JSON.stringify(currentAccount));
-        todos.removeChild(todoContainer);
-      });
+        // Remove a task
+        removeButton.addEventListener('click', () => {
+            currentProject.todos.splice(index, 1);
+            todos.removeChild(todoContainer);
+            todos.removeChild(element);
+            localStorage.setItem('user', JSON.stringify(currentAccount));
 
-      doneButton.innerText = 'Done';
-      doneButton.addEventListener('click', () => {
+            // Whenever a task is deleted, rerun openTodo event for every task
+            // this is O(n) so it is not ideal, will replace with better system soon
+            for (const element of todos.querySelectorAll('li')) {
+                var old_element = element;
+                var new_element = old_element.cloneNode(true);
+                old_element.parentNode.replaceChild(new_element, old_element);
+                openTodo(new_element, todos, currentAccount, currentProject);
+            }
+        });
+
+        doneButton.innerText = 'Done';
+        doneButton.addEventListener('click', () => {
         // If title is empty, save the new description but leave the previous title.
         if (title.value == '') {
-          element.style.display = 'block';
-          todos.removeChild(todoContainer);
-          currentProject.todos[index].description = description.value;
-          localStorage.setItem('user', JSON.stringify(currentAccount));
-          return;
+            todos.removeChild(todoContainer);
+            element.style.display = 'flex';
+            currentProject.todos[index].description = description.value;
+            localStorage.setItem('user', JSON.stringify(currentAccount));
+            return;
         }
         currentProject.todos[index].title = title.value;
         currentProject.todos[index].description = description.value;
         localStorage.setItem('user', JSON.stringify(currentAccount));
         todos.removeChild(todoContainer);
         element.querySelector('div').innerText = title.value;
-        element.style.display = 'block';
-      });
-      todos.insertBefore(todoContainer, todos.children[index]);
+        element.style.display = 'flex';
+        });
+        todos.insertBefore(todoContainer, todos.children[index]);
     });
-  }
 }

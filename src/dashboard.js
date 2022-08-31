@@ -1,6 +1,5 @@
-import { createDemo, todo, project } from './logic.js';
 import {addNewProject, displayProjects, switchProject} from './projects.js';
-import {displayTodos, addNewTodo, openTodo} from './todos.js';
+import {displayTodos, addNewTodo, openTodo, displayTodo} from './todos.js';
 
 export function dashboard() {
   let content = document.createElement('div');
@@ -23,7 +22,10 @@ export function dashboard() {
   todosContainer.className = 'todos-container';
   todos.className = 'todos';
 
-  displayTodos(currentProject, todos, demoAccount);
+  for (const todo of currentProject.todos) {
+    displayTodo(todo, todos, demoAccount, currentProject);
+  }
+  todos.append(addNewTodo(currentProject, todos, demoAccount));
   displayProjects(demoAccount, projects);
   projects.append(addProject);
   todosContainer.append(todos);
@@ -34,7 +36,9 @@ export function dashboard() {
   localStorage.setItem('user', JSON.stringify(demoAccount));
 
 
-  openTodo(todos, demoAccount, currentProject);
+  for (const element of todos.querySelectorAll('li')) {
+    openTodo(element, todos, demoAccount, currentProject);
+  }
   let currentProjectIndex = switchProject(projects, todos, demoAccount, currentProject);
   currentProject = demoAccount.projects[currentProjectIndex];
 
