@@ -29,7 +29,6 @@ export function createDemo() {
   const websiteTodo = todo('Add divs', new Date(2022, 1, 5), false);
   const websiteTodo1 = todo('Style divs', new Date(2022, 1, 6), false);
   
-
   demoAccount.addProject(inbox);
   demoAccount.addProject(website);
   inbox.addTodo(completedTodo);

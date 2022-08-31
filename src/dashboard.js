@@ -10,6 +10,7 @@ export function dashboard() {
   // let currentProject = inbox;
   // localStorage.clear();
   let demoAccount = JSON.parse(localStorage.getItem('user'));
+  console.log(demoAccount);
   let currentProject = demoAccount.projects[0];
   let addProject = addNewProject(projects, demoAccount, todos, currentProject);
   projectsContainer.className = 'projects-container';
@@ -174,7 +175,6 @@ function openTodo(todos, currentAccount, currentProject) {
   // Click on todos to "open" them
   for (const element of todos.querySelectorAll('li')) {
     element.addEventListener('click', function(e) {
-      console.log(todos);
       todos.removeChild(element);
       let title = document.createElement('textarea'); 
       let index = nodes.indexOf(e.target);
@@ -193,7 +193,7 @@ function openTodo(todos, currentAccount, currentProject) {
       title.setAttribute('column', 80);
       title.setAttribute('row', 1);
       title.value = element.innerText;
-      description.value = currentAccount.projects[0].todos[index].description;
+      description.value = currentProject.todos[index].description;
 
       title.addEventListener('keypress', function(e) {
         if (e.key == 'Enter') {
