@@ -34,6 +34,11 @@ ul {
   background-color: gray;
 }
 
+.delete-project {
+  width: 2rem;
+  height: 2rem;
+}
+
 .todos-container {
   grid-column: 2;
   display: flex;
