@@ -154,17 +154,11 @@ export function openTodo(element, todos, currentAccount, currentProject) {
           localStorage.setItem('user', JSON.stringify(currentAccount));
           let i = 0;
 
-            // Whenever a task is deleted, rerun openTodo event for every task
-            // this is O(n) so it is not ideal, will replace with better system soon
             todos.removeChild(todos.lastChild);
             for (const element of todos.querySelectorAll('li')) {
               todos.removeChild(element);
               displayTodo(currentProject.todos[i], todos, currentAccount);
               i++;
-                // var old_element = element;
-                // var new_element = old_element.cloneNode(true);
-                // old_element.parentNode.replaceChild(new_element, old_element);
-                // openTodo(new_element, todos, currentAccount, currentProject);
             }
             for (const element of todos.querySelectorAll('li')) {
               openTodo(element, todos, currentAccount, currentProject);

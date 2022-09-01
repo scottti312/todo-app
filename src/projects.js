@@ -1,4 +1,4 @@
-import {displayTodos, addNewTodo, openTodo} from './todos.js';
+import {displayTodo, addNewTodo, openTodo} from './todos.js';
 
 export function displayProjects(currentAccount, sidebar) {
   for (const project of currentAccount.projects) {
@@ -59,7 +59,7 @@ export function switchProject(projects, todos, currentAccount) {
             }
             let currentProject = currentAccount.projects[index];
             for (const todo of currentProject.todos) {
-              displayTodo(todo, currentProject, todos, currentAccount);
+              displayTodo(todo, todos, currentProject, currentAccount);
             }
             for (const element of todos.querySelectorAll('li')) {
               openTodo(element, todos, currentAccount, currentProject);

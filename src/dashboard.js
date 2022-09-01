@@ -1,5 +1,5 @@
 import {addNewProject, displayProjects, switchProject} from './projects.js';
-import {displayTodos, addNewTodo, openTodo, displayTodo} from './todos.js';
+import {addNewTodo, openTodo, displayTodo} from './todos.js';
 
 export function dashboard() {
   let content = document.createElement('div');
