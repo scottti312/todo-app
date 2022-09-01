@@ -104,7 +104,6 @@ export function addNewTodo(currentProject, todos, currentAccount) {
 }
 
 export function openTodo(element, todos, currentAccount, currentProject) {
-    console.log(todos);
     var nodes = Array.from(todos.children);
     // Click on todos to "open" them
 
@@ -138,8 +137,8 @@ export function openTodo(element, todos, currentAccount, currentProject) {
 
         title.addEventListener('keypress', function(e) {
         if (e.key == 'Enter') {
-            e.preventDefault();
-            doneButton.click();
+          e.preventDefault();
+          doneButton.click();
         }
         });
 
@@ -149,30 +148,39 @@ export function openTodo(element, todos, currentAccount, currentProject) {
 
         // Remove a task
         removeButton.addEventListener('click', () => {
-            currentProject.todos.splice(index, 1);
-            todos.removeChild(todoContainer);
-            todos.removeChild(element);
-            localStorage.setItem('user', JSON.stringify(currentAccount));
+          currentProject.todos.splice(index, 1);
+          todos.removeChild(todoContainer);
+          todos.removeChild(element);
+          localStorage.setItem('user', JSON.stringify(currentAccount));
+          let i = 0;
 
             // Whenever a task is deleted, rerun openTodo event for every task
             // this is O(n) so it is not ideal, will replace with better system soon
+            todos.removeChild(todos.lastChild);
             for (const element of todos.querySelectorAll('li')) {
-                var old_element = element;
-                var new_element = old_element.cloneNode(true);
-                old_element.parentNode.replaceChild(new_element, old_element);
-                openTodo(new_element, todos, currentAccount, currentProject);
+              todos.removeChild(element);
+              displayTodo(currentProject.todos[i], todos, currentAccount);
+              i++;
+                // var old_element = element;
+                // var new_element = old_element.cloneNode(true);
+                // old_element.parentNode.replaceChild(new_element, old_element);
+                // openTodo(new_element, todos, currentAccount, currentProject);
             }
+            for (const element of todos.querySelectorAll('li')) {
+              openTodo(element, todos, currentAccount, currentProject);
+            }
+            todos.appendChild(addNewTodo(currentProject, todos, currentAccount));
         });
 
         doneButton.innerText = 'Done';
         doneButton.addEventListener('click', () => {
         // If title is empty, save the new description but leave the previous title.
         if (title.value == '') {
-            todos.removeChild(todoContainer);
-            element.style.display = 'flex';
-            currentProject.todos[index].description = description.value;
-            localStorage.setItem('user', JSON.stringify(currentAccount));
-            return;
+          todos.removeChild(todoContainer);
+          element.style.display = 'flex';
+          currentProject.todos[index].description = description.value;
+          localStorage.setItem('user', JSON.stringify(currentAccount));
+          return;
         }
         currentProject.todos[index].title = title.value;
         currentProject.todos[index].description = description.value;
