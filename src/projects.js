@@ -92,12 +92,14 @@ export function switchProject(projectElement, projects, todos, currentAccount) {
     // Add project title to the top of the todo list
     let todosContainer = document.getElementById('todos-container');
     if (todosContainer.contains(document.getElementById('inner-project-title'))) {
-      console.log('happened');
       todosContainer.removeChild(todosContainer.firstChild);
     }
     let projectTitle = document.createElement('div');
     projectTitle.id = 'inner-project-title';
-    projectTitle.innerHTML = projectElement.firstChild.innerHTML;
+    if (projectElement.firstChild.tagName == 'DIV')
+      projectTitle.innerHTML = projectElement.firstChild.innerHTML;
+    if (projectElement.firstChild.tagName == 'INPUT')
+      projectTitle.innerHTML = projectElement.firstChild.value;
     todos.before(projectTitle)
 
     for (const todo of currentProject.todos) {
