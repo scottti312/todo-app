@@ -16,16 +16,16 @@ export function displayProject(project, sidebar, currentAccount, todos) {
   menu.classList.add('fa-xl');
   menu.addEventListener('click', (e) => {
     projectMenu(e, projectDisplay, projectTitle, menu, 
-                sidebar, project, currentAccount, todos)
+                sidebar, project, currentAccount, todos);
   });
-    projectDisplay.addEventListener('mouseover', () => {
-      if (!projectDisplay.classList.contains('project-menu'))
-        projectDisplay.append(menu);
-    });
-    projectDisplay.addEventListener('mouseout', () => {
-      if (!projectDisplay.classList.contains('project-menu'))
-      projectDisplay.removeChild(menu)
-    });
+  projectDisplay.addEventListener('mouseover', () => {
+    if (!projectDisplay.classList.contains('project-menu'))
+      projectDisplay.append(menu);
+  });
+  projectDisplay.addEventListener('mouseout', () => {
+    if (!projectDisplay.classList.contains('project-menu'))
+    projectDisplay.removeChild(menu)
+  });
   projectDisplay.append(projectTitle);
   return projectDisplay;
 }
@@ -81,7 +81,6 @@ export function switchProject(projectElement, projects, todos, currentAccount) {
     for (const project of projects.querySelectorAll('li')) {
       project.classList.remove('selected-project');
     }
-    console.log(projectElement);
     projectElement.classList.add('selected-project');
 
     let index = projectNodes.indexOf(target);
@@ -155,6 +154,7 @@ export function projectMenu(e, projectDisplay, projectTitle, menu,
       localStorage.setItem('user', JSON.stringify(currentAccount));
     }
       let resultProjectDisplay = displayProject(project, projects, currentAccount, todos);
+      resultProjectDisplay.classList.add('selected-project');
       projectDisplay.before(resultProjectDisplay);
       switchProject(resultProjectDisplay, projects, todos, currentAccount);
       projects.removeChild(projectDisplay);
