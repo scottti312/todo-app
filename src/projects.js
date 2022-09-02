@@ -4,17 +4,29 @@ import {project} from './logic.js';
 export function displayProject(project, sidebar, currentAccount, todos) {
   let projectDisplay = document.createElement('li');
   let projectTitle = document.createElement('div');
-  let menu = document.createElement('button');
 
   projectTitle.id = 'project-name';
   projectDisplay.className = 'project';
   projectTitle.innerHTML = project.title;
-  menu.innerHTML = "Menu";
-  projectDisplay.append(projectTitle, menu);
+  // menu.innerHTML = "Menu";
+
+  let menu = document.createElement('i');
+  menu.classList.add('fa-solid');
+  menu.classList.add('fa-ellipsis');
+  menu.classList.add('fa-xl');
   menu.addEventListener('click', (e) => {
     projectMenu(e, projectDisplay, projectTitle, menu, 
                 sidebar, project, currentAccount, todos)
   });
+    projectDisplay.addEventListener('mouseover', () => {
+      if (!projectDisplay.classList.contains('project-menu'))
+        projectDisplay.append(menu);
+    });
+    projectDisplay.addEventListener('mouseout', () => {
+      if (!projectDisplay.classList.contains('project-menu'))
+      projectDisplay.removeChild(menu)
+    });
+  projectDisplay.append(projectTitle);
   return projectDisplay;
 }
 
@@ -59,16 +71,6 @@ export function switchProject(projectElement, projects, todos, currentAccount) {
   // Click on projects to switch currentProject
   var projectNodes = Array.from(projects.children);
   projectElement.addEventListener('click', function(e) {
-
-    let todosContainer = document.getElementById('todos-container');
-    if (todosContainer.contains(document.getElementById('inner-project-title'))) {
-      todosContainer.removeChild(todosContainer.firstChild);
-    }
-    let projectTitle = document.createElement('div');
-    projectTitle.id = 'inner-project-title';
-    projectTitle.innerHTML = projectElement.firstChild.innerHTML;
-    todos.before(projectTitle)
-    
     let target = e.target; 
     if (target.tagName == 'DIV') {
       target = e.target.parentElement;
@@ -79,13 +81,26 @@ export function switchProject(projectElement, projects, todos, currentAccount) {
     for (const project of projects.querySelectorAll('li')) {
       project.classList.remove('selected-project');
     }
-    target.classList.add('selected-project');
+    console.log(projectElement);
+    projectElement.classList.add('selected-project');
 
     let index = projectNodes.indexOf(target);
     while(todos.firstChild) {
         todos.removeChild(todos.firstChild);
     }
     let currentProject = currentAccount.projects[index];
+
+    // Add project title to the top of the todo list
+    let todosContainer = document.getElementById('todos-container');
+    if (todosContainer.contains(document.getElementById('inner-project-title'))) {
+      console.log('happened');
+      todosContainer.removeChild(todosContainer.firstChild);
+    }
+    let projectTitle = document.createElement('div');
+    projectTitle.id = 'inner-project-title';
+    projectTitle.innerHTML = projectElement.firstChild.innerHTML;
+    todos.before(projectTitle)
+
     for (const todo of currentProject.todos) {
       displayTodo(todo, todos, currentAccount, currentProject);
     }
@@ -128,6 +143,7 @@ export function projectMenu(e, projectDisplay, projectTitle, menu,
       i++;
     }
     for (const element of projects.querySelectorAll('li')) {
+      console.log('fuck');
       switchProject(element, projects, todos, currentAccount);
     }
     projects.appendChild(addNewProject(projects, currentAccount, todos));

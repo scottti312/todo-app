@@ -45,8 +45,7 @@ export function dashboard() {
   }
 
   for (const element of sidebar.querySelectorAll('li')) {
-    let currentProjectIndex = switchProject(element, sidebar, todos, demoAccount);
-    currentProject = demoAccount.projects[currentProjectIndex];
+    switchProject(element, sidebar, todos, demoAccount);
   }
 
   let projectTitle = document.createElement('div');
