@@ -5,6 +5,8 @@ export function displayProject(project, sidebar, currentAccount, todos) {
   let projectDisplay = document.createElement('li');
   let projectTitle = document.createElement('div');
   let menu = document.createElement('button');
+
+  projectTitle.id = 'project-name';
   projectDisplay.className = 'project';
   projectTitle.innerHTML = project.title;
   menu.innerHTML = "Menu";
@@ -13,7 +15,6 @@ export function displayProject(project, sidebar, currentAccount, todos) {
     projectMenu(e, projectDisplay, projectTitle, menu, 
                 sidebar, project, currentAccount, todos)
   });
-  // sidebar.append(projectDisplay);
   return projectDisplay;
 }
 
@@ -27,15 +28,20 @@ export function addNewProject(projects, currentAccount, todos) {
     projectSubmit.innerHTML = 'Submit';
     projectSubmit.id = 'submit';
     projectSubmit.addEventListener('click', () => {
-      let newProject = project(projectInput.value);
-      currentAccount.projects.push(newProject);
-      localStorage.setItem('user', JSON.stringify(currentAccount));
-      let projectDisplay = displayProject(newProject, projects, currentAccount, todos);
-      projects.append(projectDisplay, addProject);
+      if (projectInput.value != '') {
+        let newProject = project(projectInput.value);
+        currentAccount.projects.push(newProject);
+        localStorage.setItem('user', JSON.stringify(currentAccount));
+        let projectDisplay = displayProject(newProject, projects, currentAccount, todos);
+        projects.append(projectDisplay, addProject);
+        projects.removeChild(projectInput);
+        projects.removeChild(projectSubmit);
+
+        switchProject(projectDisplay, projects, todos, currentAccount);
+      }
       projects.removeChild(projectInput);
       projects.removeChild(projectSubmit);
-
-      switchProject(projectDisplay, projects, todos, currentAccount);
+      projects.appendChild(addProject);
     });
     projects.append(projectInput);
     projects.append(projectSubmit);
@@ -53,6 +59,16 @@ export function switchProject(projectElement, projects, todos, currentAccount) {
   // Click on projects to switch currentProject
   var projectNodes = Array.from(projects.children);
   projectElement.addEventListener('click', function(e) {
+
+    let todosContainer = document.getElementById('todos-container');
+    if (todosContainer.contains(document.getElementById('inner-project-title'))) {
+      todosContainer.removeChild(todosContainer.firstChild);
+    }
+    let projectTitle = document.createElement('div');
+    projectTitle.id = 'inner-project-title';
+    projectTitle.innerHTML = projectElement.firstChild.innerHTML;
+    todos.before(projectTitle)
+    
     let target = e.target; 
     if (target.tagName == 'DIV') {
       target = e.target.parentElement;
@@ -89,6 +105,7 @@ export function projectMenu(e, projectDisplay, projectTitle, menu,
   let doneButton = document.createElement('button');
   let deleteButton = document.createElement('button');
   let index = nodes.indexOf(e.target.parentElement);
+  e.target.parentElement.classList.add('project-menu');
   doneButton.id = 'submit-project';
   doneButton.innerHTML = 'Done';
   deleteButton.innerHTML = 'Delete';
@@ -117,12 +134,14 @@ export function projectMenu(e, projectDisplay, projectTitle, menu,
   });
 
   doneButton.addEventListener('click', () => {
-    currentAccount.projects[index].title = projectTitleInput.value;
-    localStorage.setItem('user', JSON.stringify(currentAccount));
-    let resultProjectDisplay = displayProject(project, projects, currentAccount, todos);
-    projectDisplay.before(resultProjectDisplay);
-    switchProject(resultProjectDisplay, projects, todos, currentAccount);
-    projects.removeChild(projectDisplay);
+    if (projectTitleInput.value != '') {
+      currentAccount.projects[index].title = projectTitleInput.value;
+      localStorage.setItem('user', JSON.stringify(currentAccount));
+    }
+      let resultProjectDisplay = displayProject(project, projects, currentAccount, todos);
+      projectDisplay.before(resultProjectDisplay);
+      switchProject(resultProjectDisplay, projects, todos, currentAccount);
+      projects.removeChild(projectDisplay);
   });
 
   projectTitleInput.addEventListener('keypress', function(event) {

@@ -20,9 +20,8 @@ export function dashboard() {
   let addProject = addNewProject(sidebar, demoAccount, todos);
   projectsContainer.className = 'projects-container';
   sidebar.className = 'projects';
-  todosContainer.className = 'todos-container';
-  todos.className = 'todos';
-
+  todosContainer.id = 'todos-container';
+  todos.id = 'todos';
 
   for (const todo of currentProject.todos) {
     displayTodo(todo, todos, demoAccount, currentProject);
@@ -33,7 +32,6 @@ export function dashboard() {
   }
   sidebar.querySelector('li').classList.add('selected-project');
 
-
   sidebar.append(addProject);
   todosContainer.append(todos);
   projectsContainer.append(sidebar);
@@ -42,14 +40,19 @@ export function dashboard() {
   content.append(todosContainer);
   localStorage.setItem('user', JSON.stringify(demoAccount));
 
-
   for (const element of todos.querySelectorAll('li')) {
     openTodo(element, todos, demoAccount, currentProject);
   }
+
   for (const element of sidebar.querySelectorAll('li')) {
     let currentProjectIndex = switchProject(element, sidebar, todos, demoAccount);
     currentProject = demoAccount.projects[currentProjectIndex];
   }
+
+  let projectTitle = document.createElement('div');
+  projectTitle.id = 'inner-project-title';
+  projectTitle.innerHTML = sidebar.firstChild.firstChild.innerHTML;
+  todos.before(projectTitle);
 
   return content;
 }
