@@ -17,19 +17,23 @@ export function dashboard() {
   console.log(demoAccount);
   let currentProject = demoAccount.projects[0];
 
-  let addProject = addNewProject(sidebar, demoAccount, todos, currentProject);
+  let addProject = addNewProject(sidebar, demoAccount, todos);
   projectsContainer.className = 'projects-container';
   sidebar.className = 'projects';
   todosContainer.className = 'todos-container';
   todos.className = 'todos';
+
 
   for (const todo of currentProject.todos) {
     displayTodo(todo, todos, demoAccount, currentProject);
   }
   todos.append(addNewTodo(currentProject, todos, demoAccount));
   for (const project of demoAccount.projects) {
-    sidebar.append(displayProject(project, sidebar));
+    sidebar.append(displayProject(project, sidebar, demoAccount, todos));
   }
+  sidebar.querySelector('li').classList.add('selected-project');
+
+
   sidebar.append(addProject);
   todosContainer.append(todos);
   projectsContainer.append(sidebar);
@@ -42,8 +46,10 @@ export function dashboard() {
   for (const element of todos.querySelectorAll('li')) {
     openTodo(element, todos, demoAccount, currentProject);
   }
-  let currentProjectIndex = switchProject(sidebar, todos, demoAccount, currentProject);
-  currentProject = demoAccount.projects[currentProjectIndex];
+  for (const element of sidebar.querySelectorAll('li')) {
+    let currentProjectIndex = switchProject(element, sidebar, todos, demoAccount);
+    currentProject = demoAccount.projects[currentProjectIndex];
+  }
 
   return content;
 }

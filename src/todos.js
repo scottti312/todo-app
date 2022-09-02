@@ -18,6 +18,7 @@ export function displayTodo(todo, todos, currentAccount) {
         if (this.checked) {
             todo.completed = true;
             todoDisplay.style.textDecoration = 'line-through';
+            console.log(currentAccount);
             localStorage.setItem('user', JSON.stringify(currentAccount));
         } else {
             todo.completed = false;
@@ -109,80 +110,80 @@ export function openTodo(element, todos, currentAccount, currentProject) {
 
     element.addEventListener('click', function(e) {
         let target = e.target;
-        if (e.target.tagName == 'DIV') {
+        if (target.tagName == 'DIV') {
             target = e.target.parentElement;
         }
     // Children are not affected by event.
       if (target !== this) {
         return;
       }
-        element.style.display = 'none';
-        let index = nodes.indexOf(target);
-        let title = document.createElement('textarea'); 
-        let todoContainer = document.createElement('div');
-        let description = document.createElement('textarea');
-        let doneButton = document.createElement('button');
-        let removeButton = document.createElement('button');
-        let buttonsContainer = document.createElement('div');
-        
-        description.setAttribute('column', 80);
-        description.setAttribute('row', 5);
-        description.id = 'todo-description';
-        todoContainer.className = 'todo-section';
-        title.id = 'todo-title';
-        title.setAttribute('column', 80);
-        title.setAttribute('row', 1);
-        title.value = element.querySelector('div').innerText;
-        description.value = currentProject.todos[index].description;
+      element.style.display = 'none';
+      let index = nodes.indexOf(target);
+      let title = document.createElement('textarea'); 
+      let todoContainer = document.createElement('div');
+      let description = document.createElement('textarea');
+      let doneButton = document.createElement('button');
+      let removeButton = document.createElement('button');
+      let buttonsContainer = document.createElement('div');
+      
+      description.setAttribute('column', 80);
+      description.setAttribute('row', 5);
+      description.id = 'todo-description';
+      todoContainer.className = 'todo-section';
+      title.id = 'todo-title';
+      title.setAttribute('column', 80);
+      title.setAttribute('row', 1);
+      title.value = element.querySelector('div').innerText;
+      description.value = currentProject.todos[index].description;
 
-        title.addEventListener('keypress', function(e) {
-        if (e.key == 'Enter') {
-          e.preventDefault();
-          doneButton.click();
-        }
-        });
+      title.addEventListener('keypress', function(e) {
+      if (e.key == 'Enter') {
+        e.preventDefault();
+        doneButton.click();
+      }
+      });
 
-        buttonsContainer.append(removeButton, doneButton);
-        todoContainer.append(title, description, buttonsContainer);
-        removeButton.innerText = 'Delete task';
+      buttonsContainer.append(removeButton, doneButton);
+      todoContainer.append(title, description, buttonsContainer);
+      removeButton.innerText = 'Delete task';
 
-        // Remove a task
-        removeButton.addEventListener('click', () => {
-          currentProject.todos.splice(index, 1);
-          todos.removeChild(todoContainer);
+      // Remove a task
+      removeButton.addEventListener('click', () => {
+        currentProject.todos.splice(index, 1);
+        todos.removeChild(todoContainer);
+        todos.removeChild(element);
+        localStorage.setItem('user', JSON.stringify(currentAccount));
+        let i = 0;
+
+        todos.removeChild(todos.lastChild);
+        for (const element of todos.querySelectorAll('li')) {
           todos.removeChild(element);
-          localStorage.setItem('user', JSON.stringify(currentAccount));
-          let i = 0;
-
-            todos.removeChild(todos.lastChild);
-            for (const element of todos.querySelectorAll('li')) {
-              todos.removeChild(element);
-              displayTodo(currentProject.todos[i], todos, currentAccount);
-              i++;
-            }
-            for (const element of todos.querySelectorAll('li')) {
-              openTodo(element, todos, currentAccount, currentProject);
-            }
-            todos.appendChild(addNewTodo(currentProject, todos, currentAccount));
-        });
-
-        doneButton.innerText = 'Done';
-        doneButton.addEventListener('click', () => {
-        // If title is empty, save the new description but leave the previous title.
-        if (title.value == '') {
-          todos.removeChild(todoContainer);
-          element.style.display = 'flex';
-          currentProject.todos[index].description = description.value;
-          localStorage.setItem('user', JSON.stringify(currentAccount));
-          return;
+          displayTodo(currentProject.todos[i], todos, currentAccount);
+          i++;
         }
-        currentProject.todos[index].title = title.value;
+        for (const element of todos.querySelectorAll('li')) {
+          openTodo(element, todos, currentAccount, currentProject);
+        }
+        todos.appendChild(addNewTodo(currentProject, todos, currentAccount));
+      });
+
+      doneButton.innerText = 'Done';
+      doneButton.addEventListener('click', () => {
+      // If title is empty, save the new description but leave the previous title.
+      if (title.value == '') {
+        todos.removeChild(todoContainer);
+        element.style.display = 'flex';
         currentProject.todos[index].description = description.value;
         localStorage.setItem('user', JSON.stringify(currentAccount));
-        todos.removeChild(todoContainer);
-        element.querySelector('div').innerText = title.value;
-        element.style.display = 'flex';
-        });
-        todos.insertBefore(todoContainer, todos.children[index]);
+        return;
+      }
+      currentProject.todos[index].title = title.value;
+      currentProject.todos[index].description = description.value;
+      localStorage.setItem('user', JSON.stringify(currentAccount));
+      todos.removeChild(todoContainer);
+      element.querySelector('div').innerText = title.value;
+      element.style.display = 'flex';
+      });
+      todos.insertBefore(todoContainer, todos.children[index]);
     });
 }
