@@ -1,10 +1,11 @@
-import {addNewProject, displayProjects, switchProject} from './projects.js';
+import {createDemo} from './logic.js';
+import {addNewProject, displayProject, switchProject} from './projects.js';
 import {addNewTodo, openTodo, displayTodo} from './todos.js';
 
 export function dashboard() {
   let content = document.createElement('div');
   let projectsContainer = document.createElement('div');
-  let projects = document.createElement('ul');
+  let sidebar = document.createElement('ul');
   let todosContainer = document.createElement('div');
   let todos = document.createElement('ul');
 
@@ -13,12 +14,12 @@ export function dashboard() {
   // localStorage.clear();
 
   let demoAccount = JSON.parse(localStorage.getItem('user'));
+  console.log(demoAccount);
   let currentProject = demoAccount.projects[0];
 
-  console.log(demoAccount);
-  let addProject = addNewProject(projects, demoAccount, todos, currentProject);
+  let addProject = addNewProject(sidebar, demoAccount, todos, currentProject);
   projectsContainer.className = 'projects-container';
-  projects.className = 'projects';
+  sidebar.className = 'projects';
   todosContainer.className = 'todos-container';
   todos.className = 'todos';
 
@@ -26,10 +27,12 @@ export function dashboard() {
     displayTodo(todo, todos, demoAccount, currentProject);
   }
   todos.append(addNewTodo(currentProject, todos, demoAccount));
-  displayProjects(demoAccount, projects);
-  projects.append(addProject);
+  for (const project of demoAccount.projects) {
+    sidebar.append(displayProject(project, sidebar));
+  }
+  sidebar.append(addProject);
   todosContainer.append(todos);
-  projectsContainer.append(projects);
+  projectsContainer.append(sidebar);
   content.className = 'dashboard';
   content.append(projectsContainer);
   content.append(todosContainer);
@@ -39,7 +42,7 @@ export function dashboard() {
   for (const element of todos.querySelectorAll('li')) {
     openTodo(element, todos, demoAccount, currentProject);
   }
-  let currentProjectIndex = switchProject(projects, todos, demoAccount, currentProject);
+  let currentProjectIndex = switchProject(sidebar, todos, demoAccount, currentProject);
   currentProject = demoAccount.projects[currentProjectIndex];
 
   return content;

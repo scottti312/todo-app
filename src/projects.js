@@ -1,13 +1,34 @@
 import {displayTodo, addNewTodo, openTodo} from './todos.js';
 
-export function displayProjects(currentAccount, sidebar) {
-  for (const project of currentAccount.projects) {
-    let projectDisplay = document.createElement('li');
-    projectDisplay.innerHTML = project.title;
-    sidebar.append(projectDisplay);
-  }
-}
+export function displayProject(project, sidebar) {
+  let projectDisplay = document.createElement('li');
+  let projectTitle = document.createElement('div');
+  let menu = document.createElement('button');
+  projectDisplay.className = 'project';
+  projectTitle.innerHTML = project.title;
 
+  menu.addEventListener('click', () => {
+    let projectTitleInput = document.createElement('input');
+    let buttonsContainer = document.createElement('div');
+    let doneButton = document.createElement('button');
+    let deleteButton = document.createElement('button');
+    projectTitleInput.value = project.title;
+    buttonsContainer.append(deleteButton, doneButton);
+    projectDisplay.removeChild(projectTitle);
+    projectDisplay.removeChild(menu);
+    projectDisplay.append(projectTitleInput, buttonsContainer);
+
+    doneButton.addEventListener('click', () => {
+      console.log('done');
+      projectDisplay.before(displayProject(project, sidebar));
+      sidebar.removeChild(projectDisplay);
+    });
+  });
+
+  projectDisplay.append(projectTitle, menu);
+  // sidebar.append(projectDisplay);
+  return projectDisplay;
+}
 
 export function addNewProject(projects, demoAccount, todos, currentProject) {
   let addProject = document.createElement('button');
@@ -53,18 +74,22 @@ export function switchProject(projects, todos, currentAccount) {
                 return;
             }
             let index = projectNodes.indexOf(e.target);
-            console.log(index);
             while(todos.firstChild) {
                 todos.removeChild(todos.firstChild);
             }
             let currentProject = currentAccount.projects[index];
             for (const todo of currentProject.todos) {
-              displayTodo(todo, todos, currentProject, currentAccount);
+              displayTodo(todo, todos, currentAccount, currentProject);
             }
             for (const element of todos.querySelectorAll('li')) {
               openTodo(element, todos, currentAccount, currentProject);
             }
+            todos.append(addNewTodo(currentProject, todos, currentAccount));
             return index;
         });
     };
+}
+
+export function projectMenu(projects, currentAccount) {
+
 }
