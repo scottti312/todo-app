@@ -4,7 +4,7 @@ body {
 
 .dashboard {
   display: grid;
-  grid-template-columns: 1fr 5fr;
+  grid-template-columns: minmax(300px, 400px);
   height: 100vh;
   width: 100vw;
 }
@@ -39,6 +39,11 @@ ul {
   background-color: gray;
 }
 
+.project-menu {
+  display: flex;
+  flex-direction: column;
+}
+
 .projects li:hover {
   background-color: gray;
 }
@@ -46,11 +51,13 @@ ul {
 .project {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
-.project-buttons button {
-  height: 100%;
+.project button {
+  height: 1.5rem;
 }
+
 
 .delete-project {
   width: 2rem;
@@ -60,11 +67,17 @@ ul {
 .todos-container {
   grid-column: 2;
   display: flex;
-  flex-direction: column;
-  padding: 10vh 20vw 10vh 20vw;
+  justify-content: center;
   background-color: #24292E;
   color: white;
+  flex-shrink: 0;
 }
+
+.todos {
+  width: 80%;
+  max-width: 800px;
+}
+
 
 .todo-section {
   padding: 1.1rem;
