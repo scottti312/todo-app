@@ -1,32 +1,31 @@
-import {todo} from './logic.js';
+import { todo } from './logic.js';
 
 export function displayTodo(todo, todos, currentAccount) {
-    let todoDisplay = document.createElement('li');
-    let todoTitle = document.createElement('div');
-    let checkbox = document.createElement('input');
-    checkbox.setAttribute('type', 'checkbox');
-    checkbox.className = 'checkbox';
-    todoTitle.innerHTML = todo.title;
-    todoDisplay.appendChild(checkbox);
-    todoDisplay.appendChild(todoTitle);
-
-    if (todo.completed) {
-        checkbox.checked = true;
-        todoDisplay.style.textDecoration = 'line-through';
+  let todoDisplay = document.createElement('li');
+  let todoTitle = document.createElement('div');
+  let checkbox = document.createElement('input');
+  checkbox.setAttribute('type', 'checkbox');
+  checkbox.className = 'checkbox';
+  todoTitle.innerHTML = todo.title;
+  todoDisplay.appendChild(checkbox);
+  todoDisplay.appendChild(todoTitle);
+  if (todo.completed) {
+    checkbox.checked = true;
+    todoDisplay.style.textDecoration = 'line-through';
+  }
+  checkbox.addEventListener('change', function() {
+    if (this.checked) {
+      todo.completed = true;
+      todoDisplay.style.textDecoration = 'line-through';
+      console.log(currentAccount);
+      localStorage.setItem('user', JSON.stringify(currentAccount));
+    } else {
+      todo.completed = false;
+      todoDisplay.style.textDecoration = 'none';
+      localStorage.setItem('user', JSON.stringify(currentAccount));
     }
-    checkbox.addEventListener('change', function() {
-        if (this.checked) {
-            todo.completed = true;
-            todoDisplay.style.textDecoration = 'line-through';
-            console.log(currentAccount);
-            localStorage.setItem('user', JSON.stringify(currentAccount));
-        } else {
-            todo.completed = false;
-            todoDisplay.style.textDecoration = 'none';
-            localStorage.setItem('user', JSON.stringify(currentAccount));
-        }
-    });
-    todos.append(todoDisplay);
+  });
+  todos.append(todoDisplay);
 }
 
 export function addNewTodo(currentProject, todos, currentAccount) {
@@ -105,72 +104,72 @@ export function addNewTodo(currentProject, todos, currentAccount) {
 }
 
 export function openTodo(element, todos, currentAccount, currentProject) {
-    var nodes = Array.from(todos.children);
-    // Click on todos to "open" them
+  var nodes = Array.from(todos.children);
+  // Click on todos to "open" them
 
-    element.addEventListener('click', function(e) {
-        let target = e.target;
-        if (target.tagName == 'DIV') {
-            target = e.target.parentElement;
-        }
+  element.addEventListener('click', function(e) {
+    let target = e.target;
+    if (target.tagName == 'DIV') {
+      target = e.target.parentElement;
+    }
     // Children are not affected by event.
-      if (target !== this) {
-        return;
-      }
-      element.style.display = 'none';
-      let index = nodes.indexOf(target);
-      let title = document.createElement('textarea'); 
-      let todoContainer = document.createElement('div');
-      let description = document.createElement('textarea');
-      let doneButton = document.createElement('button');
-      let removeButton = document.createElement('button');
-      let buttonsContainer = document.createElement('div');
-      buttonsContainer.id = 'todo-buttons';
-      
-      removeButton.id = 'remove-task-button';
-      description.setAttribute('column', 80);
-      description.setAttribute('row', 5);
-      description.id = 'todo-description';
-      todoContainer.className = 'todo-section';
-      title.id = 'todo-title';
-      title.setAttribute('column', 80);
-      title.setAttribute('row', 1);
-      title.value = element.querySelector('div').innerText;
-      description.value = currentProject.todos[index].description;
+    if (target !== this) {
+      return;
+    }
+    element.style.display = 'none';
+    let index = nodes.indexOf(target);
+    let title = document.createElement('textarea');
+    let todoContainer = document.createElement('div');
+    let description = document.createElement('textarea');
+    let doneButton = document.createElement('button');
+    let removeButton = document.createElement('button');
+    let buttonsContainer = document.createElement('div');
+    buttonsContainer.id = 'todo-buttons';
+    doneButton.id = 'done-task-button';
+    removeButton.id = 'remove-task-button';
+    description.setAttribute('column', 80);
+    description.setAttribute('row', 5);
+    description.id = 'todo-description';
+    todoContainer.className = 'todo-section';
+    title.id = 'todo-title';
+    title.setAttribute('column', 80);
+    title.setAttribute('row', 1);
+    title.value = element.querySelector('div').innerText;
+    description.value = currentProject.todos[index].description;
 
-      title.addEventListener('keypress', function(e) {
+    title.addEventListener('keypress', function(e) {
       if (e.key == 'Enter') {
         e.preventDefault();
         doneButton.click();
       }
-      });
+    });
 
-      buttonsContainer.append(removeButton, doneButton);
-      todoContainer.append(title, description, buttonsContainer);
-      removeButton.innerText = 'Delete task';
+    buttonsContainer.append(removeButton, doneButton);
+    todoContainer.append(title, description, buttonsContainer);
+    removeButton.innerText = 'Delete task';
 
-      // Remove a task
-      removeButton.addEventListener('click', () => {
-        currentProject.todos.splice(index, 1);
-        todos.removeChild(todoContainer);
+    // Remove a task
+    removeButton.addEventListener('click', () => {
+      currentProject.todos.splice(index, 1);
+      todos.removeChild(todoContainer);
+      todos.removeChild(element);
+      localStorage.setItem('user', JSON.stringify(currentAccount));
+      let i = 0;
+
+      todos.removeChild(todos.lastChild);
+      for (const element of todos.querySelectorAll('li')) {
         todos.removeChild(element);
-        localStorage.setItem('user', JSON.stringify(currentAccount));
-        let i = 0;
+        displayTodo(currentProject.todos[i], todos, currentAccount);
+        i++;
+      }
+      for (const element of todos.querySelectorAll('li')) {
+        openTodo(element, todos, currentAccount, currentProject);
+      }
+      todos.appendChild(addNewTodo(currentProject, todos, currentAccount));
+    });
 
-        todos.removeChild(todos.lastChild);
-        for (const element of todos.querySelectorAll('li')) {
-          todos.removeChild(element);
-          displayTodo(currentProject.todos[i], todos, currentAccount);
-          i++;
-        }
-        for (const element of todos.querySelectorAll('li')) {
-          openTodo(element, todos, currentAccount, currentProject);
-        }
-        todos.appendChild(addNewTodo(currentProject, todos, currentAccount));
-      });
-
-      doneButton.innerText = 'Done';
-      doneButton.addEventListener('click', () => {
+    doneButton.innerText = 'Done';
+    doneButton.addEventListener('click', () => {
       // If title is empty, save the new description but leave the previous title.
       if (title.value == '') {
         todos.removeChild(todoContainer);
@@ -185,7 +184,7 @@ export function openTodo(element, todos, currentAccount, currentProject) {
       todos.removeChild(todoContainer);
       element.querySelector('div').innerText = title.value;
       element.style.display = 'flex';
-      });
-      todos.insertBefore(todoContainer, todos.children[index]);
     });
+    todos.insertBefore(todoContainer, todos.children[index]);
+  });
 }

@@ -1,6 +1,6 @@
-import {createDemo} from './logic.js';
-import {addNewProject, displayProject, switchProject} from './projects.js';
-import {addNewTodo, openTodo, displayTodo} from './todos.js';
+import { createDemo } from './logic.js';
+import { addNewProject, displayProject, switchProject } from './projects.js';
+import { addNewTodo, openTodo, displayTodo } from './todos.js';
 
 export function dashboard() {
   let content = document.createElement('div');
