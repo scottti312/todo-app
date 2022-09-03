@@ -125,7 +125,9 @@ export function openTodo(element, todos, currentAccount, currentProject) {
       let doneButton = document.createElement('button');
       let removeButton = document.createElement('button');
       let buttonsContainer = document.createElement('div');
+      buttonsContainer.id = 'todo-buttons';
       
+      removeButton.id = 'remove-task-button';
       description.setAttribute('column', 80);
       description.setAttribute('row', 5);
       description.id = 'todo-description';

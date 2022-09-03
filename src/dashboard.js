@@ -8,6 +8,8 @@ export function dashboard() {
   let sidebar = document.createElement('ul');
   let todosContainer = document.createElement('div');
   let todos = document.createElement('ul');
+  let themeToggle = document.createElement('button');
+  themeToggle.innerHTML = 'Toggle Theme';
 
   // let { demoAccount, inbox } = createDemo();
   // let currentProject = inbox;
@@ -27,6 +29,16 @@ export function dashboard() {
     displayTodo(todo, todos, demoAccount, currentProject);
   }
   todos.append(addNewTodo(currentProject, todos, demoAccount));
+
+  themeToggle.addEventListener('click', () => {
+    const root = document.documentElement;
+    const newTheme = root.className === 'dark' ? 'light' : 'dark';
+    root.className = newTheme;
+    // document.querySelector('html').setAttribute('color-scheme', 'light');
+    console.log(document.querySelector('html'));
+  })
+
+  projectsContainer.append(themeToggle);
   for (const project of demoAccount.projects) {
     sidebar.append(displayProject(project, sidebar, demoAccount, todos));
   }

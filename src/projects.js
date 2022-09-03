@@ -33,6 +33,7 @@ export function displayProject(project, sidebar, currentAccount, todos) {
 export function addNewProject(projects, currentAccount, todos) {
   let addProject = document.createElement('button');
   addProject.innerHTML = 'Add new project';
+  addProject.id = 'add-project-button';
   addProject.addEventListener('click', () => {
     projects.removeChild(addProject);
     let projectInput = document.createElement('input');
@@ -156,7 +157,8 @@ export function projectMenu(e, projectDisplay, projectTitle, menu,
       localStorage.setItem('user', JSON.stringify(currentAccount));
     }
       let resultProjectDisplay = displayProject(project, projects, currentAccount, todos);
-      resultProjectDisplay.classList.add('selected-project');
+      if (projectDisplay.classList.contains('selected-project'))
+        resultProjectDisplay.classList.add('selected-project');
       projectDisplay.before(resultProjectDisplay);
       switchProject(resultProjectDisplay, projects, todos, currentAccount);
       projects.removeChild(projectDisplay);

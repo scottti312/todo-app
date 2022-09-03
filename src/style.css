@@ -1,5 +1,68 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
+
+:root {
+  /* --todos-bg: #24292E;
+  --todos-fg: #E2E2E2;
+  --todos-divider: grey;
+  --projects-bg: #1F2428;
+  --projects-selected-bg: rgb(112, 112, 112);
+  --dashboard-divider: black;
+  --buttons-hover-bg: #414950;
+  --todo-border: rgb(133, 133, 133);
+  --todo-title-bg: transparent;
+  color-scheme: dark; */
+  --todos-bg: #E2E2E2;
+  --todos-fg: #24292E;
+  --todos-divider: grey;
+  --projects-bg: #c4c4c4;
+  --projects-selected-bg: rgb(146, 146, 146);
+  --dashboard-divider: black;
+  --buttons-hover-bg: #414950;
+  --todo-border: rgb(133, 133, 133);
+  --todo-title-bg: transparent;
+  color-scheme: light;
+}
+
+:root.light {
+  --todos-bg: #E2E2E2;
+  --todos-fg: #24292E;
+  --todos-divider: grey;
+  --projects-bg: #c4c4c4;
+  --projects-selected-bg: rgb(146, 146, 146);
+  --dashboard-divider: black;
+  --buttons-hover-bg: #414950;
+  --todo-border: rgb(133, 133, 133);
+  --todo-title-bg: transparent;
+  color-scheme: light;
+}
+
+:root.dark {
+  --todos-bg: #24292E;
+  --todos-fg: #E2E2E2;
+  --todos-divider: grey;
+  --projects-bg: #1F2428;
+  --projects-selected-bg: rgb(112, 112, 112);
+  --dashboard-divider: black;
+  --buttons-hover-bg: #414950;
+  --todo-border: rgb(133, 133, 133);
+  --todo-title-bg: transparent;
+  color-scheme: dark;
+}
+
+#todos-container button, #add-project-button {
+  background-color: transparent;
+  color: var(--todos-fg);
+  border: 1px solid var(--todos-divider);
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+#todos-container button:hover, #add-project-button:hover {
+  background-color: var(--buttons-hover-bg);
+}
+
 body {
   margin: 0;
   font-family: 'Roboto';
@@ -23,11 +86,11 @@ ul {
 }
 
 .projects-container {
-  border-right: 1px solid black;
+  /* border-right: 1px solid var(--dashboard-divider); */
   grid-column: 1;
   grid-row: 1 / 2;
-  background-color: #1F2428;
-  color: white;
+  background-color: var(--projects-bg);
+  color: var(--todos-fg);
   padding: 2rem;
 }
 
@@ -41,7 +104,8 @@ ul {
 }
 
 .project.selected-project {
-  background-color: gray;
+  background-color: var(--projects-selected-bg);
+  border-radius: 6px;
 }
 
 .project-menu {
@@ -49,9 +113,10 @@ ul {
   flex-direction: column;
 }
 
-.projects li:hover {
-  background-color: gray;
-}
+/* :not(.project.selected-project) .projects li:hover {
+  border: 1px solid var(--projects-selected-bg);
+  border-radius: 6px;
+} */
 
 .project {
   display: flex;
@@ -73,8 +138,8 @@ ul {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #24292E;
-  color: white;
+  background-color: var(--todos-bg);
+  color: var(--todos-fg);
   flex-shrink: 0;
   padding-top: 10vh;
 }
@@ -89,22 +154,56 @@ ul {
   max-width: 800px;
 }
 
+li .checkbox {
+  background-color: var(--projects-bg);
+}
+
 .todo-section {
   padding: 1.1rem;
   margin-bottom: 1.1rem;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid var(--todos-divider);
   display: flex;
   flex-direction: column;
 }
 
+#todo-title, #todo-description {
+  font-family: 'Roboto';
+  border: 1px solid var(--todo-border);
+  border-radius: 6px;
+  padding: 10px;
+  width: 400px;
+  resize: none;
+}
+
+#todo-buttons {
+  margin-top: 10px;
+}
+
+#todo-buttons button {
+  margin-right: 10px;
+}
+
 #todo-title {
-  height: 1rem;
-  width: 30rem;
+  font-size: 18px;
+  background-color: var(--todo-title-bg);
+  color: var(--todos-fg);
+  height: 22px;
+  overflow: hidden;
+}
+
+#todo-buttons #remove-task-button:hover {
+  background-color: rgb(197, 77, 77);
 }
 
 #todo-description {
+  font-size: 14px;
+  background-color: var(--todo-title-bg);
+  color: var(--todos-fg);
   height: 5rem;
-  width: 30rem;
+}
+
+#todo-title:focus, #todo-description:focus {
+  outline: none;
 }
 
 #todos li {
@@ -112,7 +211,7 @@ ul {
   align-items: center;
   gap: 10px;
   padding: 1.1rem 0 1.1rem 1.1rem;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid var(--todos-divider);
 }
 
 #todos li:hover {
