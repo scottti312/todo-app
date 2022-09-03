@@ -2,16 +2,6 @@
 
 
 :root {
-  /* --todos-bg: #24292E;
-  --todos-fg: #E2E2E2;
-  --todos-divider: grey;
-  --projects-bg: #1F2428;
-  --projects-selected-bg: rgb(112, 112, 112);
-  --dashboard-divider: black;
-  --buttons-hover-bg: #414950;
-  --todo-border: rgb(133, 133, 133);
-  --todo-title-bg: transparent;
-  color-scheme: dark; */
   --todos-bg: #E2E2E2;
   --todos-fg: #24292E;
   --todos-divider: grey;
@@ -113,19 +103,22 @@ ul {
   flex-direction: column;
 }
 
-/* :not(.project.selected-project) .projects li:hover {
-  border: 1px solid var(--projects-selected-bg);
-  border-radius: 6px;
-} */
-
 .project {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.project button {
-  height: 1.5rem;
+.project-buttons button {
+  cursor: pointer;
+  border-radius: 6px;
+  border: 1px solid var(--todos-divider);
+  padding: 0.5rem;
+
+}
+
+#delete-project:hover {
+  background-color: rgb(197, 77, 77);
 }
 
 .delete-project {

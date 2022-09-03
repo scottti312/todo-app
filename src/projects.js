@@ -8,7 +8,6 @@ export function displayProject(project, sidebar, currentAccount, todos) {
   projectTitle.id = 'project-name';
   projectDisplay.className = 'project';
   projectTitle.innerHTML = project.title;
-  // menu.innerHTML = "Menu";
 
   let menu = document.createElement('i');
   menu.classList.add('fa-solid');
@@ -123,6 +122,7 @@ export function projectMenu(e, projectDisplay, projectTitle, menu,
   let deleteButton = document.createElement('button');
   let index = nodes.indexOf(e.target.parentElement);
   e.target.parentElement.classList.add('project-menu');
+  deleteButton.id = 'delete-project';
   doneButton.id = 'submit-project';
   doneButton.innerHTML = 'Done';
   deleteButton.innerHTML = 'Delete';
