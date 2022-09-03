@@ -73,7 +73,10 @@ export function switchProject(projectElement, projects, todos, currentAccount) {
   projectElement.addEventListener('click', function(e) {
     let target = e.target; 
     if (target.tagName == 'DIV') {
-      target = e.target.parentElement;
+      target = projectElement;
+    }
+    if (target.tagName == 'I') {
+      target = projectElement;
     }
     if (target !== this) {
         return;
