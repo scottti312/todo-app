@@ -39,6 +39,7 @@ export function addNewTodo(currentProject, todos, currentAccount) {
     let todoInputTitle = document.createElement('input');
     let todoDescriptionLabel = document.createElement('label');
     let todoInputDescription = document.createElement('textarea');
+    let todoInputDate = document.createElement('input');
     let todoSubmit = document.createElement('button');
     let todoDisplay = document.createElement('li');
     let todoTitle = document.createElement('div');
@@ -56,6 +57,7 @@ export function addNewTodo(currentProject, todos, currentAccount) {
     todoInputDescription.setAttribute('row', 3);
     todoSubmit.innerHTML = 'Submit';
     todoSubmit.id = 'submit';
+    todoInputDate.setAttribute('type', 'date');
 
     todoSubmit.addEventListener('click', () => {
       if (todoInputTitle.value != '') {
@@ -83,7 +85,7 @@ export function addNewTodo(currentProject, todos, currentAccount) {
       }
     });
 
-    createTodoContainer.append(todoTitleLabel, todoInputTitle, todoDescriptionLabel, todoInputDescription);
+    createTodoContainer.append(todoTitleLabel, todoInputTitle, todoDescriptionLabel, todoInputDescription, todoInputDate);
     todos.append(createTodoContainer);
     todos.append(todoSubmit);
 
