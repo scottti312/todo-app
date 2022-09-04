@@ -63,10 +63,11 @@ export function addNewTodo(currentProject, todos, currentAccount) {
       if (todoInputTitle.value != '') {
         let newTodoTitle = todoInputTitle.value;
         let newTodoDescription = todoInputDescription.value;
+        let newTodoDate = todoInputDate.value;
         if (todoInputDescription.value == '') {
           newTodoDescription = 'Empty';
         }
-        let newTodo = todo(newTodoTitle, newTodoDescription);
+        let newTodo = todo(newTodoTitle, newTodoDescription, newTodoDate);
         currentProject.todos.push(newTodo);
         localStorage.setItem('user', JSON.stringify(currentAccount));
         todoTitle.innerHTML = newTodo.title;
