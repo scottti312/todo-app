@@ -7,6 +7,8 @@ export function displayTodo(todo, todos, currentAccount) {
   let todoDate = document.createElement('div');
   checkbox.setAttribute('type', 'checkbox');
   checkbox.className = 'checkbox';
+  todoTitle.id = 'todolist-todo-title';
+  todoDate.id = 'todo-date';
   todoTitle.innerHTML = todo.title;
   todoDate.innerHTML = todo.dueDate;
 
@@ -136,15 +138,19 @@ export function openTodo(element, todos, currentAccount, currentProject) {
     let title = document.createElement('textarea');
     let todoContainer = document.createElement('div');
     let description = document.createElement('textarea');
+    let dueDate = document.createElement('input');
     let doneButton = document.createElement('button');
     let removeButton = document.createElement('button');
     let buttonsContainer = document.createElement('div');
     buttonsContainer.id = 'todo-buttons';
     doneButton.id = 'done-task-button';
     removeButton.id = 'remove-task-button';
+    dueDate.id = 'due-date';
     description.setAttribute('column', 80);
     description.setAttribute('row', 5);
     description.id = 'todo-description';
+    dueDate.setAttribute('type', 'date');
+    dueDate.value = currentProject.todos[index].dueDate;
     todoContainer.className = 'todo-section';
     title.id = 'todo-title';
     title.setAttribute('column', 80);
@@ -160,7 +166,7 @@ export function openTodo(element, todos, currentAccount, currentProject) {
     });
 
     buttonsContainer.append(removeButton, doneButton);
-    todoContainer.append(title, description, buttonsContainer);
+    todoContainer.append(title, description, dueDate, buttonsContainer);
     removeButton.innerText = 'Delete task';
 
     // Remove a task
@@ -195,9 +201,12 @@ export function openTodo(element, todos, currentAccount, currentProject) {
       }
       currentProject.todos[index].title = title.value;
       currentProject.todos[index].description = description.value;
+      currentProject.todos[index].dueDate = dueDate.value;
       localStorage.setItem('user', JSON.stringify(currentAccount));
       todos.removeChild(todoContainer);
-      element.querySelector('div').innerText = title.value;
+      element.querySelectorAll('div')[0].innerText = title.value;
+      element.querySelectorAll('div')[1].innerText = dueDate.value;
+
       element.style.display = 'flex';
     });
     todos.insertBefore(todoContainer, todos.children[index]);
