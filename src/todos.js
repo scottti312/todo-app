@@ -4,11 +4,23 @@ export function displayTodo(todo, todos, currentAccount) {
   let todoDisplay = document.createElement('li');
   let todoTitle = document.createElement('div');
   let checkbox = document.createElement('input');
+  let todoDate = document.createElement('div');
   checkbox.setAttribute('type', 'checkbox');
   checkbox.className = 'checkbox';
   todoTitle.innerHTML = todo.title;
+  todoDate.innerHTML = todo.dueDate;
+
+  let currentDate = new Date();
+  currentDate = [currentDate.getFullYear(),
+                 (currentDate.getMonth() + 1).toString().padStart(2, '0'),
+                 (currentDate.getDate()).toString().padStart(2, '0'),
+                ].join('-');
+  if (todo.dueDate == currentDate) {
+    todoDate.style.color = 'var(--todo-date-green)';
+  }
   todoDisplay.appendChild(checkbox);
   todoDisplay.appendChild(todoTitle);
+  todoDisplay.appendChild(todoDate);
   if (todo.completed) {
     checkbox.checked = true;
     todoDisplay.style.textDecoration = 'line-through';
@@ -67,7 +79,7 @@ export function addNewTodo(currentProject, todos, currentAccount) {
         if (todoInputDescription.value == '') {
           newTodoDescription = 'Empty';
         }
-        let newTodo = todo(newTodoTitle, newTodoDescription, newTodoDate);
+        let newTodo = todo(newTodoTitle, newTodoDescription, newTodoDate, false);
         currentProject.todos.push(newTodo);
         localStorage.setItem('user', JSON.stringify(currentAccount));
         todoTitle.innerHTML = newTodo.title;

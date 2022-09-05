@@ -10,6 +10,7 @@
   --dashboard-divider: black;
   --buttons-hover-bg: #aaaaaa;
   --todo-border: rgb(133, 133, 133);
+  --todo-date-green: green;
   --todo-title-bg: transparent;
   color-scheme: light;
 }
@@ -23,6 +24,7 @@
   --dashboard-divider: black;
   --buttons-hover-bg: #aaaaaa;
   --todo-border: rgb(133, 133, 133);
+  --todo-date-green: green;
   --todo-title-bg: transparent;
   color-scheme: light;
 }
@@ -36,6 +38,7 @@
   --dashboard-divider: black;
   --buttons-hover-bg: #414950;
   --todo-border: rgb(133, 133, 133);
+  --todo-date-green: #72ff72;
   --todo-title-bg: transparent;
   color-scheme: dark;
 }
