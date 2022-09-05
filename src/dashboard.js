@@ -14,8 +14,11 @@ export function dashboard() {
   let { demoAccount, inbox } = createDemo();
   let currentProject = inbox;
 
-  demoAccount = JSON.parse(localStorage.getItem('user'));
-  currentProject = demoAccount.projects[0];
+  if (localStorage.getItem('user') !== null) {
+    demoAccount = JSON.parse(localStorage.getItem('user'));
+    console.log(demoAccount);
+    currentProject = demoAccount.projects[0];
+  }
 
   let addProject = addNewProject(sidebar, demoAccount, todos);
   projectsContainer.className = 'projects-container';
