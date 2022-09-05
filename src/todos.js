@@ -116,7 +116,7 @@ export function addNewTodo(currentProject, todos, currentAccount) {
         document.getElementById('submit').click();
       }
     });
-  })
+  });
   return addTodo;
 }
 
