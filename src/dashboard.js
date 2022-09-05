@@ -11,16 +11,11 @@ export function dashboard() {
   let themeToggle = document.createElement('button');
   themeToggle.innerHTML = 'Toggle Theme';
 
-  if (localStorage.getItem('user') === null) {
-    let { demoAccount, inbox } = createDemo();
-    let currentProject = inbox;
-    localStorage.clear();
-  }
+  let { demoAccount, inbox } = createDemo();
+  let currentProject = inbox;
 
-  if (localStorage.getItem('user') !== null) {
-  let demoAccount = JSON.parse(localStorage.getItem('user'));
-  let currentProject = demoAccount.projects[0];
-  }
+  demoAccount = JSON.parse(localStorage.getItem('user'));
+  currentProject = demoAccount.projects[0];
 
   let addProject = addNewProject(sidebar, demoAccount, todos);
   projectsContainer.className = 'projects-container';
