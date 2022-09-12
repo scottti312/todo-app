@@ -1,5 +1,4 @@
 # todo-app
-
 A todo app made to practice using webpack and ES6 features. Visit here: https://scottti312.github.io/todo-app/
 
 ## Features
@@ -10,6 +9,11 @@ A todo app made to practice using webpack and ES6 features. Visit here: https://
 * Set due dates on tasks
 * Light/dark theme
 
+## Screenshots
+![Image](screenshots/Screenshot%20from%202022-09-12%2016-32-21.png)
+![Image](screenshots/Screenshot%20from%202022-09-12%2016-32-32.png)
+![Image](screenshots/Screenshot%20from%202022-09-12%2016-32-46.png)
+![Image](screenshots/Screenshot%20from%202022-09-12%2016-32-54.png)
 ## Development setup
 ```
 npm init -y
