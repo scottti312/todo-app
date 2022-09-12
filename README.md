@@ -2,6 +2,14 @@
 
 A todo app made to practice using webpack and ES6 features. Visit here: https://scottti312.github.io/todo-app/
 
+## Features
+* Add and remove projects/tasks.
+* Complete tasks
+* Edit tasks/projects name/description
+* Saves progress by local storage
+* Set due dates on tasks
+* Light/dark theme
+
 ## Development setup
 ```
 npm init -y
