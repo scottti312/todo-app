@@ -1,7 +1,7 @@
 {
   "name": "todo-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "A todo app made to practice using webpack and ES6 features. Visit here: https://scottti312.github.io/todo-app/",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -21,9 +21,17 @@
     "style-loader": "^3.3.1",
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.10.0"
+    "webpack-dev-server": "^4.11.0"
   },
   "dependencies": {
     "gh-pages": "^4.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scottti312/todo-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/scottti312/todo-app/issues"
+  },
+  "homepage": "https://github.com/scottti312/todo-app#readme"
 }

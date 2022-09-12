@@ -11,14 +11,7 @@ export function dashboard() {
   let themeToggle = document.createElement('button');
   themeToggle.innerHTML = 'Toggle Theme';
 
-  let { demoAccount, inbox } = createDemo();
-  let currentProject = inbox;
-
-  if (localStorage.getItem('user') !== null) {
-    demoAccount = JSON.parse(localStorage.getItem('user'));
-    console.log(demoAccount);
-    currentProject = demoAccount.projects[0];
-  }
+  let { demoAccount, currentProject } = createNewOrFindExistingAccount();
 
   let addProject = addNewProject(sidebar, demoAccount, todos);
   projectsContainer.className = 'projects-container';
@@ -67,4 +60,16 @@ export function dashboard() {
   todos.before(projectTitle);
 
   return content;
+}
+
+function createNewOrFindExistingAccount() {
+  let { demoAccount, inbox } = createDemo();
+  let currentProject = inbox;
+
+  if (localStorage.getItem('user') !== null) {
+    demoAccount = JSON.parse(localStorage.getItem('user'));
+    console.log(demoAccount);
+    currentProject = demoAccount.projects[0];
+  }
+  return { demoAccount, currentProject };
 }
